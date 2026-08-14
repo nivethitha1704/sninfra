@@ -33,7 +33,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[85vh] bg-slate-100 dark:bg-slate-950 flex items-center justify-center px-4 py-12">
+    <div className="min-h-[85vh] bg-white dark:bg-slate-950 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800/35 p-8 sm:p-10 shadow-lg text-left relative glass">
         
         {/* Decorative Badge */}

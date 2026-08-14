@@ -44,7 +44,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center flex-col gap-4">
+      <div className="min-h-screen bg-white dark:bg-slate-900 flex items-center justify-center flex-col gap-4">
         <div className="w-12 h-12 border-4 border-primary border-t-secondary rounded-full animate-spin" />
         <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Loading secure connection...</p>
       </div>
@@ -68,7 +68,7 @@ const LayoutWrapper = () => {
   const isAdminRoute = location.pathname.startsWith('/admin') && location.pathname !== '/admin/login';
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8FAFC] dark:bg-[#1C68F5] text-[#1E293B] dark:text-slate-100 transition-colors">
+    <div className="flex flex-col min-h-screen bg-white dark:bg-[#0F172A] text-[#1E293B] dark:text-slate-100 transition-colors">
       <CustomCursor />
       
       {/* Conditionally hide public header/footer on active Admin Dashboard screens */}

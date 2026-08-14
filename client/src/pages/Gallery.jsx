@@ -89,7 +89,7 @@ const Gallery = () => {
   });
 
   return (
-    <div className="w-full bg-[#F8FAFC] dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+    <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
       
       {/* HEADER SECTION */}
       <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">

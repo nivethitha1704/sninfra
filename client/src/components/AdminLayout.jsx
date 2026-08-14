@@ -37,7 +37,7 @@ const AdminLayout = ({ children }) => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 flex flex-col md:flex-row relative">
+    <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col md:flex-row relative">
       
       {/* LEFT SIDEBAR PANEL */}
       <aside className="w-full md:w-64 bg-slate-900 text-slate-400 flex flex-col justify-between shrink-0 p-6 border-r border-slate-950">

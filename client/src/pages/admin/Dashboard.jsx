@@ -81,7 +81,7 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center flex-col gap-4">
+      <div className="min-h-screen bg-white dark:bg-slate-900 flex items-center justify-center flex-col gap-4">
         <FaSpinner size={32} className="animate-spin text-secondary" />
         <p className="text-sm text-slate-500">Compiling Analytics charts...</p>
       </div>

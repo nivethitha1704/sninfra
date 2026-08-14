@@ -40,7 +40,7 @@ const ProjectDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center flex-col gap-4">
+      <div className="min-h-screen bg-white dark:bg-slate-900 flex items-center justify-center flex-col gap-4">
         <div className="w-12 h-12 border-4 border-primary border-t-secondary rounded-full animate-spin" />
         <p className="text-sm text-slate-500">Loading project layout specifications...</p>
       </div>
@@ -49,7 +49,7 @@ const ProjectDetails = () => {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center gap-6 text-center">
+      <div className="min-h-screen bg-white dark:bg-slate-900 flex flex-col items-center justify-center gap-6 text-center">
         <h2 className="text-xl font-bold text-slate-700 dark:text-white">Project not found</h2>
         <Link to="/projects" className="bg-primary text-white px-6 py-3 rounded-xl text-xs font-bold">
           Back to Projects List
@@ -63,7 +63,7 @@ const ProjectDetails = () => {
     : [];
 
   return (
-    <div className="w-full bg-[#F8FAFC] dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+    <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
       
       {/* HEADER SECTION */}
       <section className="bg-[#1C68F5] text-white py-16 px-6 relative border-b border-white/10">

@@ -197,7 +197,7 @@ const Home = () => {
   ];
 
   return (
-    <div className="w-full bg-[#F8FAFC] dark:bg-[#0F172A] text-[#1E293B] dark:text-slate-100 antialiased">
+    <div className="w-full bg-white dark:bg-[#0F172A] text-[#1E293B] dark:text-slate-100 antialiased">
 
       {/* --- HERO SECTION --- */}
       <section className="relative min-h-[85vh] flex items-center justify-start px-6 sm:px-16 py-24 bg-slate-950 overflow-hidden">

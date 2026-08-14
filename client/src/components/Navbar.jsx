@@ -118,19 +118,9 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
-
-          <div className="h-6 w-px bg-blue-800/40" />
-
           {/* UTILITIES & CALL-TO-ACTIONS */}
           <div className="flex items-center gap-4">
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors shadow-sm"
-              aria-label="Toggle theme mode"
-            >
-              {darkMode ? <FaSun size={15} className="text-[#FFC100]" /> : <FaMoon size={15} />}
-            </button>
+            
 
             {/* Dashboard redirect if logged in */}
             {user && (
@@ -158,12 +148,7 @@ const Navbar = () => {
 
         {/* MOBILE MENU TOGGLER */}
         <div className="flex items-center gap-3 lg:hidden">
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-xl bg-white/10 text-white"
-          >
-            {darkMode ? <FaSun size={15} className="text-[#FFC100]" /> : <FaMoon size={15} />}
-          </button>
+          
 
           {user && (
             <Link

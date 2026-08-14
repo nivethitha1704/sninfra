@@ -7,7 +7,7 @@ export const useSettings = () => useContext(SettingsContext);
 
 export const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState(null);
-  const [darkMode, setDarkMode] = useState(localStorage.getItem('theme') === 'dark');
+  const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Fetch website settings on load
@@ -67,27 +67,17 @@ export const SettingsProvider = ({ children }) => {
     return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '0, 0, 0';
   };
 
-  // Trigger dark mode styles on document element
+  // Trigger dark mode styles on document element (Disabled: always light mode for white background)
   const toggleDarkMode = () => {
-    const nextMode = !darkMode;
-    setDarkMode(nextMode);
-    if (nextMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+    setDarkMode(false);
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
   };
 
   useEffect(() => {
     fetchSettings();
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
+    document.documentElement.classList.remove('dark');
+  }, []);
 
   const value = {
     settings,
