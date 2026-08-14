@@ -63,14 +63,15 @@ const Services = () => {
   };
 
   return (
-    <div className="w-full bg-slate-50 dark:bg-slate-900 min-h-screen pb-20">
+    <div className="w-full bg-[#F8FAFC] dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
       
       {/* HEADER SECTION */}
-      <section className="bg-gradient-to-br from-primary to-slate-950 text-white py-20 px-6 text-center relative border-b border-primary-dark">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,140,0,0.1),transparent)] pointer-events-none" />
+      <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,193,0,0.1),transparent)] pointer-events-none" />
         <div className="max-w-4xl mx-auto relative z-10">
-          <h1 className="text-4xl md:text-5xl font-black mb-4">Our Construction Services</h1>
-          <p className="text-slate-300 text-xs md:text-sm max-w-xl mx-auto leading-relaxed">
+          <div className="w-12 h-1 bg-[#FFC100] mx-auto mb-4" />
+          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">Our Construction Services</h1>
+          <p className="text-blue-100 text-xs md:text-sm max-w-xl mx-auto leading-relaxed">
             Professional planning, certified approvals, load bearing structural configuration, and premium lock-and-key developments.
           </p>
         </div>

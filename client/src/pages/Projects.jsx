@@ -47,14 +47,15 @@ const Projects = () => {
   const categories = ['All', 'Residential', 'Commercial', 'Interior', 'Renovation', 'Ongoing', 'Completed'];
 
   return (
-    <div className="w-full bg-slate-50 dark:bg-slate-900 min-h-screen pb-20">
+    <div className="w-full bg-[#F8FAFC] dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
       
       {/* HEADER SECTION */}
-      <section className="bg-gradient-to-br from-primary to-slate-950 text-white py-20 px-6 text-center relative border-b border-primary-dark">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,140,0,0.1),transparent)] pointer-events-none" />
+      <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,193,0,0.1),transparent)] pointer-events-none" />
         <div className="max-w-4xl mx-auto relative z-10">
-          <h1 className="text-4xl md:text-5xl font-black mb-4">Our Construction Portfolio</h1>
-          <p className="text-slate-300 text-xs md:text-sm max-w-xl mx-auto leading-relaxed">
+          <div className="w-12 h-1 bg-[#FFC100] mx-auto mb-4" />
+          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">Our Construction Portfolio</h1>
+          <p className="text-blue-100 text-xs md:text-sm max-w-xl mx-auto leading-relaxed">
             Browse through our residential villas, commercial structures, false ceiling designs, and before-after renovations.
           </p>
         </div>
@@ -83,7 +84,7 @@ const Projects = () => {
               onClick={() => setActiveTab(cat)}
               className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
                 activeTab === cat
-                  ? 'bg-secondary text-white shadow-md shadow-orange-500/25'
+                  ? 'bg-[#FFC100] text-[#1C68F5] shadow-md shadow-[#FFC100]/20'
                   : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 border border-slate-200/40 dark:border-slate-800/40'
               }`}
             >

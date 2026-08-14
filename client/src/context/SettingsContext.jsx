@@ -28,9 +28,9 @@ export const SettingsProvider = ({ children }) => {
         mapIframe: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3726.7953388896212!2d77.009411!3d10.673176799999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba839c41ac96adf%3A0x2ab711cb85b35ec0!2sSN%20Infra!5e1!3m2!1sen!2sin!4v1786689408616!5m2!1sen!2sin',
         whatsapp: '+918438568318',
         themeColors: {
-          primary: '#0F4C81',
-          secondary: '#FF8C00',
-          accent: '#00C897'
+          primary: '#ffc100',
+          secondary: '#1C68F5',
+          accent: '#ffc100'
         },
         socialLinks: {
           facebook: '',
@@ -50,14 +50,14 @@ export const SettingsProvider = ({ children }) => {
   const applyThemeColors = (colors) => {
     if (!colors) return;
     const root = document.documentElement;
-    root.style.setProperty('--primary-color', colors.primary || '#0F4C81');
-    root.style.setProperty('--secondary-color', colors.secondary || '#FF8C00');
-    root.style.setProperty('--accent-color', colors.accent || '#00C897');
+    root.style.setProperty('--primary-color', colors.primary || '#ffc100');
+    root.style.setProperty('--secondary-color', colors.secondary || '#1C68F5');
+    root.style.setProperty('--accent-color', colors.accent || '#ffc100');
     
     // Create soft light/dark variants using custom opacity layers or hex translations
-    root.style.setProperty('--primary-color-rgb', hexToRgb(colors.primary || '#0F4C81'));
-    root.style.setProperty('--secondary-color-rgb', hexToRgb(colors.secondary || '#FF8C00'));
-    root.style.setProperty('--accent-color-rgb', hexToRgb(colors.accent || '#00C897'));
+    root.style.setProperty('--primary-color-rgb', hexToRgb(colors.primary || '#ffc100'));
+    root.style.setProperty('--secondary-color-rgb', hexToRgb(colors.secondary || '#1C68F5'));
+    root.style.setProperty('--accent-color-rgb', hexToRgb(colors.accent || '#ffc100'));
   };
 
   const hexToRgb = (hex) => {

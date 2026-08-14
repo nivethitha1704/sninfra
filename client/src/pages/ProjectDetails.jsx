@@ -63,15 +63,15 @@ const ProjectDetails = () => {
     : [];
 
   return (
-    <div className="w-full bg-slate-50 dark:bg-slate-900 min-h-screen pb-20">
+    <div className="w-full bg-[#F8FAFC] dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
       
       {/* HEADER SECTION */}
-      <section className="bg-gradient-to-br from-primary to-slate-950 text-white py-16 px-6 relative border-b border-primary-dark">
+      <section className="bg-[#1C68F5] text-white py-16 px-6 relative border-b border-white/10">
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col items-start text-left">
-          <Link to="/projects" className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 mb-6">
+          <Link to="/projects" className="text-xs text-blue-200 hover:text-white flex items-center gap-1.5 mb-6">
             <FaChevronLeft size={10} /> Back to Projects Index
           </Link>
-          <span className="bg-secondary text-white text-[9px] uppercase tracking-widest font-extrabold px-3 py-1 rounded-md mb-4 shadow">
+          <span className="bg-[#FFC100] text-[#1C68F5] text-[9px] uppercase tracking-widest font-extrabold px-3 py-1 rounded-md mb-4 shadow">
             {project.category}
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-3">

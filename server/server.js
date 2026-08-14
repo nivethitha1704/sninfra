@@ -149,16 +149,25 @@ const seedDatabase = async () => {
       console.log('Seeded default Admin user: admin@sninfra.com / SNInfraAdmin2026!');
     }
 
-    // 2. Seed Default Website Settings & Update Map URL
+    // 2. Seed Default Website Settings & Update Map URL & Force Color Palette
     let settings = await Settings.findOne({ key: 'global_settings' });
     const targetMapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3726.7953388896212!2d77.009411!3d10.673176799999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba839c41ac96adf%3A0x2ab711cb85b35ec0!2sSN%20Infra!5e1!3m2!1sen!2sin!4v1786689408616!5m2!1sen!2sin';
+    const targetThemeColors = {
+      primary: '#ffc100',
+      secondary: '#1C68F5',
+      accent: '#ffc100'
+    };
     if (!settings) {
-      await Settings.create({ mapIframe: targetMapUrl });
+      await Settings.create({ 
+        mapIframe: targetMapUrl,
+        themeColors: targetThemeColors
+      });
       console.log('Seeded default global settings.');
-    } else if (settings.mapIframe !== targetMapUrl) {
+    } else {
       settings.mapIframe = targetMapUrl;
+      settings.themeColors = targetThemeColors;
       await settings.save();
-      console.log('Updated map location in database settings.');
+      console.log('Updated database settings to force requested color scheme.');
     }
 
     // 3. Seed Default Services

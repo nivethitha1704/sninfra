@@ -37,7 +37,7 @@ const FloatingWidgets = () => {
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-emerald-500/50 hover:-translate-y-1 transition-all duration-300 group relative"
+        className="w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-1 transition-all duration-300 group relative"
         title="WhatsApp Consultation"
       >
         <FaWhatsapp size={26} className="animate-pulse" />
@@ -49,7 +49,7 @@ const FloatingWidgets = () => {
       {/* Direct Call Button */}
       <a
         href={callUrl}
-        className="w-14 h-14 bg-primary text-white hover:bg-primary-light rounded-full flex items-center justify-center shadow-lg hover:shadow-primary/50 hover:-translate-y-1 transition-all duration-300 group relative"
+        className="w-14 h-14 bg-[#FFC100] text-[#1C68F5] hover:bg-[#ffca28] rounded-full flex items-center justify-center shadow-lg hover:shadow-[#FFC100]/30 hover:-translate-y-1 transition-all duration-300 group relative font-bold"
         title="Call SN Infra"
       >
         <FaPhoneAlt size={20} />
@@ -62,7 +62,7 @@ const FloatingWidgets = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="w-14 h-14 glass text-slate-800 dark:text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-orange-500/25 hover:bg-secondary hover:text-white hover:-translate-y-1 transition-all duration-300 animate-fade-in group relative"
+          className="w-14 h-14 bg-[#1C68F5] hover:bg-[#091aa1] text-white rounded-full flex items-center justify-center shadow-lg hover:shadow-[#1C68F5]/30 hover:-translate-y-1 transition-all duration-300 animate-fade-in group relative"
           title="Scroll to Top"
         >
           <FaChevronUp size={18} />

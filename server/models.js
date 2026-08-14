@@ -116,9 +116,9 @@ const settingsSchema = new mongoose.Schema({
   mapIframe: { type: String, default: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3726.7953388896212!2d77.009411!3d10.673176799999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba839c41ac96adf%3A0x2ab711cb85b35ec0!2sSN%20Infra!5e1!3m2!1sen!2sin!4v1786689408616!5m2!1sen!2sin' },
   whatsapp: { type: String, default: '+918438568318' },
   themeColors: {
-    primary: { type: String, default: '#0F4C81' }, // Deep Blue
-    secondary: { type: String, default: '#FF8C00' }, // Orange
-    accent: { type: String, default: '#00C897' } // Emerald
+    primary: { type: String, default: '#ffc100' }, // Orange
+    secondary: { type: String, default: '#1C68F5' }, // Dark Navy
+    accent: { type: String, default: '#ffc100' } // Orange
   },
   socialLinks: {
     facebook: { type: String, default: '' },

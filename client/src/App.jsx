@@ -68,7 +68,7 @@ const LayoutWrapper = () => {
   const isAdminRoute = location.pathname.startsWith('/admin') && location.pathname !== '/admin/login';
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors">
+    <div className="flex flex-col min-h-screen bg-[#F8FAFC] dark:bg-[#1C68F5] text-[#1E293B] dark:text-slate-100 transition-colors">
       <CustomCursor />
       
       {/* Conditionally hide public header/footer on active Admin Dashboard screens */}

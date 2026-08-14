@@ -19,7 +19,7 @@
 }
 
 .dark .glass {
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(28, 104, 245, 0.55);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -33,7 +33,7 @@
 }
 
 .dark .glass-navbar {
-  background: rgba(15, 23, 42, 0.7);
+  background: rgba(28, 104, 245, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -69,7 +69,7 @@
   background: #f1f5f9;
 }
 .dark ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #1C68F5;
 }
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
@@ -78,7 +78,7 @@
 }
 .dark ::-webkit-scrollbar-thumb {
   background: #334155;
-  border: 2px solid #0f172a;
+  border: 2px solid #1C68F5;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #FF8C00;
