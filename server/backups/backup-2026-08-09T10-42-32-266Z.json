@@ -1,0 +1,223 @@
+{
+  "timestamp": "2026-08-09T10:42:29.077Z",
+  "version": "1.0.0",
+  "collections": {
+    "users": [
+      {
+        "_id": "6a63b752027ba9f30a1648a5",
+        "name": "SN Infra Admin",
+        "email": "admin@sninfra.com",
+        "password": "$2a$10$sY1n8XDsb/PPQSrUGRIJHeAxCgua4ZQGh.bwcKNlgH6K4bZeLLUJ2",
+        "role": "Admin",
+        "createdAt": "2026-07-24T19:04:50.522Z",
+        "__v": 0,
+        "lastLogin": "2026-07-24T19:18:38.708Z"
+      }
+    ],
+    "projects": [],
+    "services": [
+      {
+        "_id": "6a63b752027ba9f30a1648ad",
+        "title": "Planning",
+        "slug": "planning",
+        "icon": "FaRegMap",
+        "description": "Expert layout plotting and blueprints tailormade for residential and commercial applications.",
+        "orderIndex": 0,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648ae",
+        "title": "Building Approval",
+        "slug": "building-approval",
+        "icon": "FaFileSignature",
+        "description": "Seamless approval acquisition processes across municipality and DTCP zones.",
+        "orderIndex": 1,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648af",
+        "title": "Vastu Consultation",
+        "slug": "vastu-consultation",
+        "icon": "FaCompass",
+        "description": "Ancient architectural alignments matching spatial planning for peace and prosperity.",
+        "orderIndex": 3,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648b0",
+        "title": "Residential Construction",
+        "slug": "residential-construction",
+        "icon": "FaHome",
+        "description": "Constructing premium luxury villas, apartments, and independent houses with quality materials.",
+        "orderIndex": 4,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648b1",
+        "title": "Commercial Construction",
+        "slug": "commercial-construction",
+        "icon": "FaBuilding",
+        "description": "Building contemporary high-capacity office spaces, complexes, showrooms, and retail warehouses.",
+        "orderIndex": 2,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648b2",
+        "title": "Duplex Construction",
+        "slug": "duplex-construction",
+        "icon": "FaRegBuilding",
+        "description": "Tailoring customized split-level duplex apartments and family homes.",
+        "orderIndex": 5,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648b3",
+        "title": "Interior Design",
+        "slug": "interior-design",
+        "icon": "FaCouch",
+        "description": "Premium false ceilings, customized modular kitchens, walk-in closets, and aesthetic finishes.",
+        "orderIndex": 6,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648b4",
+        "title": "Exterior Design",
+        "slug": "exterior-design",
+        "icon": "FaPaintRoller",
+        "description": "High-end elevation tiles, glass walls, modern landscaping layouts, and compound wall designs.",
+        "orderIndex": 7,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648b5",
+        "title": "Renovation",
+        "slug": "renovation",
+        "icon": "FaTools",
+        "description": "Restructuring, retrofitting structural components, and modernizing aging structures.",
+        "orderIndex": 8,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648b6",
+        "title": "Structural Design",
+        "slug": "structural-design",
+        "icon": "FaDraftingTable",
+        "description": "Safety calculations, steel-concrete configurations, beam-column mappings, and foundation diagrams.",
+        "orderIndex": 9,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648b7",
+        "title": "Surveying",
+        "slug": "surveying",
+        "icon": "FaMapMarkedAlt",
+        "description": "Precise boundary demarcations and contour maps using professional total-station devices.",
+        "orderIndex": 10,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648b8",
+        "title": "Labour Contract",
+        "slug": "labour-contract",
+        "icon": "FaUsers",
+        "description": "Supplying highly skilled masonry, reinforcement, fabrication, plumbing, and electrical labour.",
+        "orderIndex": 11,
+        "__v": 0
+      },
+      {
+        "_id": "6a63b752027ba9f30a1648b9",
+        "title": "3D Elevation Design",
+        "slug": "3d-elevation-design",
+        "icon": "FaCube",
+        "description": "Photorealistic architectural walkthroughs, exterior renders, and interior 3D spacing previews.",
+        "orderIndex": 12,
+        "__v": 0
+      }
+    ],
+    "gallery": [],
+    "testimonials": [
+      {
+        "_id": "6a63bcd1027ba9f30a16499a",
+        "clientName": "tamilselvan",
+        "role": "house owner",
+        "reviewText": "A nice work has done in the given deadline",
+        "rating": 5,
+        "clientImage": "",
+        "status": "Hide",
+        "createdAt": "2026-07-24T19:28:17.089Z",
+        "__v": 0
+      }
+    ],
+    "enquiries": [
+      {
+        "_id": "6a63bafc027ba9f30a164929",
+        "name": "tamilselvan",
+        "phone": "+918428863860",
+        "email": "tamilselvan24650@gmail.com",
+        "message": "hello ",
+        "status": "Marked Contacted",
+        "replies": [
+          {
+            "subject": "Re: SN Infra Inquiry Response",
+            "body": "Hi tamilselvan,\n\nThank you for reaching out to SN Infra regarding your project. We reviewed your notes:\n\"hello \"\n\n[Write your response details here]\n\nBest Regards,\nSN Infra Team\n+91 84385 68318\nsninfracbe@gmail.com",
+            "_id": "6a63bb18027ba9f30a164930",
+            "sentAt": "2026-07-24T19:20:56.350Z"
+          }
+        ],
+        "createdAt": "2026-07-24T19:20:28.637Z",
+        "__v": 1
+      }
+    ],
+    "settings": [
+      {
+        "themeColors": {
+          "primary": "#0F4C81",
+          "secondary": "#FF8C00",
+          "accent": "#00C897"
+        },
+        "socialLinks": {
+          "facebook": "",
+          "instagram": "",
+          "youtube": "",
+          "linkedin": ""
+        },
+        "_id": "6a63b752027ba9f30a1648aa",
+        "key": "global_settings",
+        "companyName": "SN Infra",
+        "tagline": "Planning • Approval • Vastu • Construction • Interior & Exterior • Renovation • Surveying • Labour Contract • Structural Design",
+        "phone": "+91 84385 68318",
+        "email": "sninfracbe@gmail.com",
+        "address": "1, Kamaraj Road, Near Roundana, Mahalingapuram, Tamil Nadu – 642002",
+        "mapIframe": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3921.2721868352695!2d77.000624!3d10.636389!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDM4JzExLjAiTiA3N8KwMDAnMDIuMiJF!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
+        "whatsapp": "+918438568318",
+        "seoKeywords": "SN Infra, Construction, Planning, Approval, Vastu, Coimbatore, Pollachi",
+        "seoDescription": "SN Infra is a premium construction company offering planning, approval, vastu, building construction, structural design, surveying, and interior design.",
+        "logoUrl": "",
+        "faviconUrl": "",
+        "__v": 0
+      }
+    ],
+    "activityLogs": [
+      {
+        "_id": "6a63ba8e027ba9f30a1648ee",
+        "userId": "6a63b752027ba9f30a1648a5",
+        "userName": "SN Infra Admin",
+        "action": "Login",
+        "details": "User logged in successfully",
+        "ipAddress": "::1",
+        "timestamp": "2026-07-24T19:18:38.724Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a63bb18027ba9f30a164932",
+        "userId": "6a63b752027ba9f30a1648a5",
+        "userName": "SN Infra Admin",
+        "action": "Reply Enquiry",
+        "details": "Emailed reply to: tamilselvan24650@gmail.com",
+        "ipAddress": "::1",
+        "timestamp": "2026-07-24T19:20:56.377Z",
+        "__v": 0
+      }
+    ]
+  }
+}
