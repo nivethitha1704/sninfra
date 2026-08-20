@@ -9,7 +9,7 @@ const SEO = ({ title, description, keywords, image, path = '' }) => {
   const defaultTitle = 'SN Infra | Best Building Construction in Coimbatore & Pollachi';
   const defaultDesc = 'SN Infra is the leading construction company in Coimbatore & Pollachi. We specialize in premium building construction, DTCP building approval, Vastu-compliant structures, structural design, and renovations.';
   const defaultKeywords = 'construction at Coimbatore, construction company in Coimbatore, best builders in Coimbatore, building approval Coimbatore, construction Pollachi, building contractors Coimbatore, SN Infra';
-  const baseUrl = 'https://sninfra.co.in';
+  const baseUrl = 'https://sninfra.onrender.com';
 
   useEffect(() => {
     // 1. Title tag

@@ -10,6 +10,8 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
+import http from 'http';
+import https from 'https';
 
 // Import models
 import { 
@@ -1430,6 +1432,12 @@ setInterval(() => {
 }, 24 * 60 * 60 * 1000);
 
 // Serve static client build files if they exist (production mode fallback)
+// Health Check Endpoint (used for self-ping and monitoring tools)
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', uptime: process.uptime(), timestamp: new Date() });
+});
+
+// Serve static client build files if they exist (production mode fallback)
 const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
 if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
@@ -1453,4 +1461,19 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`SN Infra Server running on http://localhost:${PORT}`);
+  
+  // Initiate self-ping to keep server awake on free hosting tiers (e.g. Render/Heroku)
+  const SELF_PING_URL = process.env.SELF_PING_URL;
+  if (SELF_PING_URL) {
+    const pingInterval = 14 * 60 * 1000; // 14 minutes
+    setInterval(() => {
+      const protocol = SELF_PING_URL.startsWith('https') ? https : http;
+      protocol.get(SELF_PING_URL, (res) => {
+        console.log(`Keep-Alive self-ping status: ${res.statusCode}`);
+      }).on('error', (err) => {
+        console.error('Keep-Alive self-ping error:', err.message);
+      });
+    }, pingInterval);
+    console.log(`Self-ping keep-alive loop scheduled targeting: ${SELF_PING_URL}`);
+  }
 });
