@@ -9,6 +9,7 @@ import {
 import * as Icons from 'react-icons/fa';
 import axios from 'axios';
 import { useSettings } from '../context/SettingsContext';
+import SEO from '../components/SEO';
 
 // --- ANIMATED COUNTER COMPONENT ---
 const AnimatedCounter = ({ value, suffix = '', duration = 2000 }) => {
@@ -198,6 +199,12 @@ const Home = () => {
 
   return (
     <div className="w-full bg-white dark:bg-[#0F172A] text-[#1E293B] dark:text-slate-100 antialiased">
+      <SEO 
+        title="Best Building Construction in Coimbatore & Pollachi" 
+        description="SN Infra is the leading construction company in Coimbatore & Pollachi. We specialize in premium building construction, DTCP building approval, Vastu-compliant layouts, structural design, and renovations."
+        keywords="construction at Coimbatore, construction company in Coimbatore, best builders in Coimbatore, building approval Coimbatore, construction Pollachi, building contractors Coimbatore, SN Infra"
+        path="/"
+      />
 
       {/* --- HERO SECTION --- */}
       <section className="relative min-h-[85vh] flex items-center justify-start px-6 sm:px-16 py-24 bg-slate-950 overflow-hidden">

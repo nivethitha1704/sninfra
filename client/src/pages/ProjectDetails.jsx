@@ -6,6 +6,8 @@ import {
   FaCalendarAlt, FaDownload, FaShareAlt, FaCheckCircle, 
   FaChevronLeft, FaTimes, FaGlobe, FaChevronRight 
 } from 'react-icons/fa';
+import SEO from '../components/SEO';
+
 
 const ProjectDetails = () => {
   const { id } = useParams();
@@ -64,6 +66,13 @@ const ProjectDetails = () => {
 
   return (
     <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+      <SEO 
+        title={`${project.name} | ${project.category} in ${project.location}`}
+        description={`${project.name} is a premium ${project.category} construction by SN Infra located in ${project.location}. View layouts, structural blueprints, and site progress details.`}
+        keywords={`SN Infra, ${project.name}, ${project.location}, ${project.category} construction, builder ${project.location}`}
+        image={project.thumbnail}
+        path={`/projects/${id}`}
+      />
       
       {/* HEADER SECTION */}
       <section className="bg-[#1C68F5] text-white py-16 px-6 relative border-b border-white/10">

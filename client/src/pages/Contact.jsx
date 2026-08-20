@@ -6,6 +6,8 @@ import {
   FaWhatsapp, FaPaperPlane, FaClock 
 } from 'react-icons/fa';
 import { useSettings } from '../context/SettingsContext';
+import SEO from '../components/SEO';
+
 
 const Contact = () => {
   const { settings } = useSettings();
@@ -38,6 +40,12 @@ const Contact = () => {
 
   return (
     <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+      <SEO 
+        title="Contact Us | Construction Office Coimbatore & Pollachi" 
+        description="Get in touch with SN Infra construction company. Contact us for building estimations, DTCP approvals, residential duplex constructions, and interior designs. Office located at Mahalingapuram, Pollachi."
+        keywords="contact SN Infra, builders phone Coimbatore, construction office Pollachi, building estimation"
+        path="/contact"
+      />
       
       {/* HEADER SECTION */}
       <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">

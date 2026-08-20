@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { FaCheckCircle, FaUserCheck, FaBullseye, FaBinoculars, FaHandsHelping } from 'react-icons/fa';
 import { useSettings } from '../context/SettingsContext';
+import SEO from '../components/SEO';
+
 
 const About = () => {
   const { settings } = useSettings();
@@ -47,6 +49,12 @@ const About = () => {
 
   return (
     <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+      <SEO 
+        title="About Us | Coimbatore & Pollachi Construction Specialists" 
+        description="Learn about SN Infra, our dedicated mission, structural vision, and core values. We are leading builders in Coimbatore and Pollachi specializing in safety and Vastu compliance."
+        keywords="SN Infra, about SN Infra, construction Coimbatore, builders Pollachi, planning, engineering construction"
+        path="/about"
+      />
       
       {/* HEADER SECTION */}
       <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">

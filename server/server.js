@@ -39,6 +39,7 @@ app.use(express.json());
 
 // Serve static uploads
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+app.use('/photos', express.static(path.join(__dirname, '..', 'client', 'photos')));
 
 // Rate Limiter for API stability
 const apiLimiter = rateLimit({
@@ -100,6 +101,80 @@ const logActivity = async (userId, userName, action, details, req) => {
     });
   } catch (err) {
     console.error('Failed to write activity log:', err);
+  }
+};
+
+// Sync project photos/drone images with global Gallery collection
+const syncProjectGallery = async (project) => {
+  try {
+    const isPublic = ['Ongoing', 'Completed'].includes(project.status);
+
+    if (!isPublic) {
+      // If the project is not public (Draft or Archive), remove all its images from the gallery
+      await Gallery.deleteMany({ projectId: project._id });
+      return;
+    }
+
+    const allProjectImages = project.images || [];
+    const allDroneImages = project.droneImages || [];
+    const combinedUrls = [...allProjectImages, ...allDroneImages];
+
+    // Delete gallery items that are no longer in the project's images or droneImages
+    await Gallery.deleteMany({ 
+      projectId: project._id, 
+      url: { $nin: combinedUrls } 
+    });
+
+    // Check what is currently in the gallery for this project
+    const existingGalleryItems = await Gallery.find({ projectId: project._id });
+    const existingUrls = existingGalleryItems.map(item => item.url);
+
+    // Add images that are in the project but NOT in the gallery
+    for (const url of allProjectImages) {
+      if (!existingUrls.includes(url)) {
+        let category = project.category === 'Interior' ? 'Interior' : (project.status === 'Completed' ? 'Completed' : 'Site Progress');
+        await Gallery.create({
+          title: project.name,
+          url: url,
+          category: category,
+          beforeAfter: false,
+          projectId: project._id
+        });
+      }
+    }
+
+    for (const url of allDroneImages) {
+      if (!existingUrls.includes(url)) {
+        await Gallery.create({
+          title: project.name,
+          url: url,
+          category: 'Drone',
+          beforeAfter: false,
+          projectId: project._id
+        });
+      }
+    }
+
+    // Sync existing items' titles and categories
+    const updatedCategory = project.category === 'Interior' ? 'Interior' : (project.status === 'Completed' ? 'Completed' : 'Site Progress');
+    
+    // Update non-drone gallery items
+    await Gallery.updateMany(
+      { projectId: project._id, category: { $ne: 'Drone' } },
+      { 
+        title: project.name,
+        category: updatedCategory
+      }
+    );
+
+    // Update drone gallery items (only title)
+    await Gallery.updateMany(
+      { projectId: project._id, category: 'Drone' },
+      { title: project.name }
+    );
+
+  } catch (err) {
+    console.error('Error syncing project gallery:', err);
   }
 };
 
@@ -482,6 +557,7 @@ app.post('/api/projects', authenticateJWT, upload.fields([
     };
 
     const project = await Project.create(projectData);
+    await syncProjectGallery(project);
     await logActivity(req.user.id, req.user.name, 'Create Project', `Created project: ${project.name}`, req);
     res.status(201).json(project);
   } catch (error) {
@@ -619,6 +695,7 @@ app.put('/api/projects/:id', authenticateJWT, upload.fields([
 
     project.updatedAt = new Date();
     await project.save();
+    await syncProjectGallery(project);
     
     await logActivity(req.user.id, req.user.name, 'Update Project', `Updated project: ${project.name}`, req);
     res.json(project);
@@ -641,6 +718,7 @@ app.delete('/api/projects/:id', authenticateJWT, async (req, res) => {
     for (const url of project.droneImages) await deleteFromStorage(url);
     for (const url of project.floorPlans) await deleteFromStorage(url);
 
+    await Gallery.deleteMany({ projectId: project._id });
     await Project.findByIdAndDelete(req.params.id);
     await logActivity(req.user.id, req.user.name, 'Delete Project', `Deleted project: ${project.name}`, req);
     res.json({ message: 'Project deleted successfully' });
@@ -662,6 +740,7 @@ app.post('/api/projects/:id/duplicate', authenticateJWT, async (req, res) => {
     duplicatedObj.status = 'Draft'; // Reset duplicated to draft status
 
     const duplicatedProject = await Project.create(duplicatedObj);
+    await syncProjectGallery(duplicatedProject);
     await logActivity(req.user.id, req.user.name, 'Duplicate Project', `Duplicated project: ${project.name} to ${duplicatedProject.name}`, req);
     res.status(201).json(duplicatedProject);
   } catch (error) {
@@ -767,9 +846,34 @@ app.delete('/api/services/:id', authenticateJWT, async (req, res) => {
 // Public Gallery display
 app.get('/api/gallery', async (req, res) => {
   try {
+    let localItems = [];
+    const photosDir = path.join(__dirname, '..', 'client', 'photos');
+    if (fs.existsSync(photosDir)) {
+      const files = await fs.promises.readdir(photosDir);
+      const imageExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg'];
+      localItems = files
+        .filter(file => imageExtensions.includes(path.extname(file).toLowerCase()))
+        .map((file, index) => {
+          const formattedTitle = path.parse(file).name
+            .replace(/ copy( \d+)?/g, '')
+            .replace(/[-_]/g, ' ')
+            .replace(/\b\w/g, c => c.toUpperCase());
+          
+          return {
+            _id: `local-${index}-${file}`,
+            url: `/photos/${file}`,
+            title: formattedTitle,
+            category: 'Construction',
+            beforeAfter: false
+          };
+        });
+    }
+
     const galleryItems = await Gallery.find({}).sort({ orderIndex: 1, createdAt: -1 });
-    res.json(galleryItems);
+    const combined = [...localItems, ...galleryItems];
+    res.json(combined);
   } catch (error) {
+    console.error('Failed to retrieve gallery:', error);
     res.status(500).json({ error: 'Failed to retrieve gallery' });
   }
 });
@@ -1325,9 +1429,20 @@ setInterval(() => {
   createBackup().catch(err => console.error('Daily automated backup failed:', err));
 }, 24 * 60 * 60 * 1000);
 
+// Serve static client build files if they exist (production mode fallback)
+const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+}
+
 // Default wildcard fallback
 app.get('*', (req, res) => {
-  res.status(404).json({ error: 'Endpoint routing not matched' });
+  const indexHtmlPath = path.join(clientDistPath, 'index.html');
+  if (fs.existsSync(indexHtmlPath) && !req.path.startsWith('/api') && !req.path.startsWith('/uploads') && !req.path.startsWith('/photos')) {
+    res.sendFile(indexHtmlPath);
+  } else {
+    res.status(404).json({ error: 'Endpoint routing not matched' });
+  }
 });
 
 // Global Error Handler

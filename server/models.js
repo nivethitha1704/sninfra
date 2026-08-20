@@ -76,6 +76,7 @@ const gallerySchema = new mongoose.Schema({
   beforeUrl: { type: String },
   afterUrl: { type: String },
   orderIndex: { type: Number, default: 0 },
+  projectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', index: true },
   createdAt: { type: Date, default: Date.now }
 });
 

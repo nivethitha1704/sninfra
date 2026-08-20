@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaEye, FaTimes } from 'react-icons/fa';
+import SEO from '../components/SEO';
+
 
 // --- BEFORE AFTER COMPONENT ---
 const BeforeAfterSlider = ({ before, after }) => {
@@ -64,7 +66,6 @@ const BeforeAfterSlider = ({ before, after }) => {
 const Gallery = () => {
   const [gallery, setGallery] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState('All');
   const [lightboxImage, setLightboxImage] = useState(null);
 
   const fetchGallery = async () => {
@@ -82,14 +83,14 @@ const Gallery = () => {
     fetchGallery();
   }, []);
 
-  const categories = ['All', 'Construction', 'Interior', 'Exterior', 'Drone', 'Completed', 'Site Progress'];
-
-  const filteredGallery = gallery.filter(item => {
-    return activeCategory === 'All' || item.category === activeCategory;
-  });
-
   return (
     <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+      <SEO 
+        title="Media Gallery | Design Visualizations & Site Progress" 
+        description="Browse our gallery of Completed villa designs, active site progress photos, interior layouts, false ceiling models, and before-after renovation sliders."
+        keywords="SN Infra gallery, interior designs, before after construction, building photos Coimbatore"
+        path="/gallery"
+      />
       
       {/* HEADER SECTION */}
       <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">
@@ -103,23 +104,6 @@ const Gallery = () => {
         </div>
       </section>
 
-      {/* CATEGORIES BUTTONS */}
-      <section className="max-w-7xl mx-auto px-6 pt-12 flex justify-center flex-wrap gap-2">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`px-4 py-2.5 rounded text-xs font-bold uppercase tracking-wider transition-all ${
-              activeCategory === cat
-                ? 'bg-[#FFC100] text-[#1C68F5] shadow-md'
-                : 'bg-white dark:bg-[#0F172A] text-slate-700 dark:text-slate-300 hover:bg-slate-100 border border-slate-200 dark:border-slate-800'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </section>
-
       {/* GALLERY LIST */}
       <section className="max-w-7xl mx-auto px-6 pt-12">
         {loading ? (
@@ -128,13 +112,13 @@ const Gallery = () => {
               <div key={idx} className="bg-white dark:bg-[#0F172A] rounded-lg h-64 animate-pulse border border-slate-200 dark:border-slate-800" />
             ))}
           </div>
-        ) : filteredGallery.length === 0 ? (
+        ) : gallery.length === 0 ? (
           <div className="text-center py-20 bg-white dark:bg-[#0F172A]/40 rounded-lg border border-dashed border-slate-200 dark:border-slate-800">
-            <p className="text-sm font-semibold text-slate-400">No media assets in this category.</p>
+            <p className="text-sm font-semibold text-slate-400">No media assets available in the gallery.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-            {filteredGallery.map((item) => (
+            {gallery.map((item) => (
               <div 
                 key={item._id}
                 className="bg-white dark:bg-[#0F172A] rounded-lg overflow-hidden p-3 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col group relative"
@@ -165,7 +149,6 @@ const Gallery = () => {
                 {item.title && (
                   <div className="p-3 text-left">
                     <h4 className="text-xs font-bold text-[#1C68F5] dark:text-white uppercase tracking-tight leading-snug line-clamp-1">{item.title}</h4>
-                    <span className="text-[9px] uppercase tracking-wider font-bold text-slate-400">{item.category}</span>
                   </div>
                 )}
               </div>

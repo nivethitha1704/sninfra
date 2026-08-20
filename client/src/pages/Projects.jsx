@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaSearch, FaMapMarkerAlt, FaRulerCombined, FaCoins, FaTasks } from 'react-icons/fa';
+import SEO from '../components/SEO';
+
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -48,6 +50,12 @@ const Projects = () => {
 
   return (
     <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+      <SEO 
+        title="Projects Portfolio | Residential & Commercial Constructions" 
+        description="Explore SN Infra's completed and ongoing projects, including premium houses, luxury duplex layouts, commercial showrooms, and interior visualizations in Coimbatore and Pollachi."
+        keywords="SN Infra projects, construction portfolio, building designs, ongoing constructions, completed projects"
+        path="/projects"
+      />
       
       {/* HEADER SECTION */}
       <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">

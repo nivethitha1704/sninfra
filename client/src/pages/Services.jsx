@@ -3,6 +3,8 @@ import axios from 'axios';
 import * as Icons from 'react-icons/fa';
 import { FaToolbox, FaCheckCircle, FaTimes, FaFileSignature } from 'react-icons/fa';
 import { useSettings } from '../context/SettingsContext';
+import SEO from '../components/SEO';
+
 
 const Services = () => {
   const { settings } = useSettings();
@@ -64,6 +66,12 @@ const Services = () => {
 
   return (
     <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+      <SEO 
+        title="Services | Construction, Approvals, Vastu & Interiors" 
+        description="Discover our full suite of professional services including building construction, DTCP approval, Vastu consultation, structural design, interior layouts, and renovation."
+        keywords="construction services, building approvals, vastu consultation, structural design Coimbatore, interior layouts"
+        path="/services"
+      />
       
       {/* HEADER SECTION */}
       <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">
