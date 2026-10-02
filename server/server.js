@@ -12,6 +12,14 @@ import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
 import http from 'http';
 import https from 'https';
+import dns from 'dns';
+
+// Fix for Render / cloud container DNS SRV lookup failures
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
+} catch (dnsErr) {
+  console.warn('Unable to set custom DNS servers:', dnsErr.message);
+}
 
 // Import models
 import { 
@@ -55,17 +63,38 @@ const apiLimiter = rateLimit({
 });
 app.use('/api/', apiLimiter);
 
-// Database connection
-let MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sn-infra';
-if (MONGODB_URI.includes('<db_password>')) {
-  MONGODB_URI = 'mongodb://127.0.0.1:27017/sn-infra';
+// Database connection - Connect strictly to MongoDB Atlas Main Database (No local DB fallback)
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('CRITICAL: MONGODB_URI is not defined in environment variables!');
 }
-mongoose.connect(MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB database');
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    console.log('Connected to MongoDB Atlas database');
     seedDatabase();
-  })
-  .catch(err => console.error('MongoDB database connection error:', err));
+  } catch (err) {
+    console.error('Primary MongoDB Atlas connection error:', err.message);
+
+    // If SRV lookup fails on Render / container DNS, fallback directly to the resolved Atlas replica set nodes without SRV
+    if (err.message && (err.message.includes('querySrv') || err.message.includes('ENOTFOUND') || err.message.includes('ECONNREFUSED'))) {
+      console.log('Falling back to direct connection via Atlas replica set endpoints...');
+      const directAtlasUri = 'mongodb://nivethitha1704_db_user:nivethitha@ac-iupx9qg-shard-00-00.kfqgsu6.mongodb.net:27017,ac-iupx9qg-shard-00-01.kfqgsu6.mongodb.net:27017,ac-iupx9qg-shard-00-02.kfqgsu6.mongodb.net:27017/sn-infra?ssl=true&replicaSet=atlas-k90fam-shard-0&authSource=admin&retryWrites=true&w=majority';
+      try {
+        await mongoose.connect(directAtlasUri);
+        console.log('Successfully connected to MongoDB Atlas via direct replica set endpoints!');
+        seedDatabase();
+        return;
+      } catch (directErr) {
+        console.error('Direct Atlas replica set connection error:', directErr.message);
+      }
+    }
+  }
+};
+
+connectDB();
 
 // --- HELPER MIDDLEWARES ---
 
