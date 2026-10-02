@@ -1,8 +1,8 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/uploads/(.*)", "destination": "/uploads/$1" },
-    { "source": "/photos/(.*)", "destination": "/photos/$1" },
+    { "source": "/api/(.*)", "destination": "https://sninfra.onrender.com/api/$1" },
+    { "source": "/uploads/(.*)", "destination": "https://sninfra.onrender.com/uploads/$1" },
+    { "source": "/photos/(.*)", "destination": "https://sninfra.onrender.com/photos/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
