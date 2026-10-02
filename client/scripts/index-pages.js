@@ -95,7 +95,7 @@ export function indexAllPages() {
       pageHtml = pageHtml.replace(/<meta property="og:description" content=".*?" \/>/i, `<meta property="og:description" content="${meta.description}" />`);
       pageHtml = pageHtml.replace(/<meta property="twitter:description" content=".*?" \/>/i, `<meta property="twitter:description" content="${meta.description}" />`);
     }
-    const pageUrl = `https://sninfra.onrender.com/${route}`;
+    const pageUrl = `https://sninfra.co.in/${route}`;
     pageHtml = pageHtml.replace(/<meta property="og:url" content=".*?" \/>/i, `<meta property="og:url" content="${pageUrl}" />`);
     pageHtml = pageHtml.replace(/<meta property="twitter:url" content=".*?" \/>/i, `<meta property="twitter:url" content="${pageUrl}" />`);
 

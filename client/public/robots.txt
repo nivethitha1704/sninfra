@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://sninfra.onrender.com/sitemap.xml
+Sitemap: https://sninfra.co.in/sitemap.xml
