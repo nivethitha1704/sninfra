@@ -1,0 +1,22 @@
+# Environment variables (Never commit secrets)
+.env
+.env.*
+*.env
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Build outputs
+dist/
+dist-ssr/
+
+# Operating System & Editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
