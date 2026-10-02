@@ -65,7 +65,7 @@ const Services = () => {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+    <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-0">
       <SEO 
         title="Services | Construction, Approvals, Vastu & Interiors" 
         description="Discover our full suite of professional services including building construction, DTCP approval, Vastu consultation, structural design, interior layouts, and renovation."
@@ -74,9 +74,9 @@ const Services = () => {
       />
       
       {/* HEADER SECTION */}
-      <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">
+      <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,193,0,0.1),transparent)] pointer-events-none" />
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="max-w-4xl mx-auto relative z-10" data-aos="fade-down">
           <div className="w-12 h-1 bg-[#FFC100] mx-auto mb-4" />
           <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">Our Construction Services</h1>
           <p className="text-blue-100 text-xs md:text-sm max-w-xl mx-auto leading-relaxed">
@@ -99,11 +99,13 @@ const Services = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((svc) => {
+            {services.map((svc, idx) => {
               const IconComponent = Icons[svc.icon] || FaToolbox;
               return (
                 <div
                   key={svc._id}
+                  data-aos="fade-up"
+                  data-aos-delay={(idx % 3) * 100}
                   onClick={() => setSelectedService(svc)}
                   className="bg-white dark:bg-slate-800/80 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between border border-slate-200/50 dark:border-slate-800/35 relative group cursor-pointer glow-accent overflow-hidden"
                 >

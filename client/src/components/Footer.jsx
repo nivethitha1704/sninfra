@@ -1,12 +1,27 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaFacebookF, FaInstagram, FaYoutube, FaLinkedinIn } from 'react-icons/fa';
 import { useSettings } from '../context/SettingsContext';
 import logoImg from '../logo.png';
 
 const Footer = () => {
   const { settings } = useSettings();
+  const location = useLocation();
   const currentYear = new Date().getFullYear();
+
+  const handleLinkClick = (e, path) => {
+    if (path.includes('#')) {
+      const elementId = path.split('#')[1];
+      if (location.pathname === '/') {
+        e.preventDefault();
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+        window.history.pushState(null, '', `/#${elementId}`);
+      }
+    }
+  };
 
   const companyName = settings?.companyName || 'SN Infra';
   const tagline = settings?.tagline || 'Planning • Approval • Vastu • Construction • Interior & Exterior • Renovation • Surveying • Labour Contract • Structural Design';
@@ -27,8 +42,8 @@ const Footer = () => {
 
   const quickLinks = [
     { name: 'About Us', path: '/about' },
-    { name: 'Our Projects', path: '/projects' },
-    { name: 'Photo Gallery', path: '/gallery' },
+    { name: 'Our Services', path: '/services' },
+    { name: 'Building & Interiors Gallery', path: '/gallery' },
     { name: 'Contact Us', path: '/contact' },
     { name: 'Client Reviews', path: '/#testimonials' }
   ];
@@ -85,7 +100,11 @@ const Footer = () => {
           <ul className="flex flex-col gap-3">
             {quickLinks.map((link) => (
               <li key={link.name}>
-                <Link to={link.path} className="text-xs text-slate-200 hover:text-[#FFC100] hover:translate-x-1 transition-all inline-block">
+                <Link 
+                  to={link.path} 
+                  onClick={(e) => handleLinkClick(e, link.path)}
+                  className="text-xs text-slate-200 hover:text-[#FFC100] hover:translate-x-1 transition-all inline-block"
+                >
                   {link.name}
                 </Link>
               </li>

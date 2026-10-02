@@ -58,9 +58,9 @@ const Projects = () => {
       />
       
       {/* HEADER SECTION */}
-      <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">
+      <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,193,0,0.1),transparent)] pointer-events-none" />
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="max-w-4xl mx-auto relative z-10" data-aos="fade-down">
           <div className="w-12 h-1 bg-[#FFC100] mx-auto mb-4" />
           <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">Our Construction Portfolio</h1>
           <p className="text-blue-100 text-xs md:text-sm max-w-xl mx-auto leading-relaxed">
@@ -70,7 +70,7 @@ const Projects = () => {
       </section>
 
       {/* FILTER & SEARCH PANEL */}
-      <section className="max-w-7xl mx-auto px-6 pt-12 flex flex-col md:flex-row items-center justify-between gap-6">
+      <section className="max-w-7xl mx-auto px-6 pt-12 flex flex-col md:flex-row items-center justify-between gap-6" data-aos="fade-up">
         
         {/* Search bar */}
         <div className="w-full md:max-w-md relative">
@@ -117,9 +117,11 @@ const Projects = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((proj) => (
+            {filteredProjects.map((proj, idx) => (
               <div 
                 key={proj._id}
+                data-aos="fade-up"
+                data-aos-delay={(idx % 3) * 100}
                 className="bg-white dark:bg-slate-800/80 rounded-3xl overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-800/35 flex flex-col hover:shadow-xl transition-all group relative"
               >
                 {/* Image block */}

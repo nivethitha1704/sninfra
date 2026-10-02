@@ -15,7 +15,7 @@ import https from 'https';
 
 // Import models
 import { 
-  User, Project, Service, Gallery, 
+  User, Project, Service, Gallery, GalleryCategory,
   Testimonial, Enquiry, Settings, ActivityLog 
 } from './models.js';
 
@@ -39,9 +39,11 @@ app.use(helmet({
 app.use(cors());
 app.use(express.json());
 
-// Serve static uploads
+// Serve static uploads and photos
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+app.use('/photos', express.static(path.join(__dirname, '..', 'client', 'public', 'photos')));
 app.use('/photos', express.static(path.join(__dirname, '..', 'client', 'photos')));
+app.use('/photos', express.static(path.join(__dirname, 'public', 'photos')));
 
 // Rate Limiter for API stability
 const apiLimiter = rateLimit({
@@ -54,7 +56,10 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 
 // Database connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sn-infra';
+let MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sn-infra';
+if (MONGODB_URI.includes('<db_password>')) {
+  MONGODB_URI = 'mongodb://127.0.0.1:27017/sn-infra';
+}
 mongoose.connect(MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB database');
@@ -216,14 +221,14 @@ const seedDatabase = async () => {
     // 1. Seed Admin User
     const adminCount = await User.countDocuments({});
     if (adminCount === 0) {
-      const hashedPassword = await bcrypt.hash('SNInfraAdmin2026!', 10);
+      const hashedPassword = await bcrypt.hash('sninfra@admin', 10);
       await User.create({
         name: 'SN Infra Admin',
-        email: 'admin@sninfra.com',
+        email: 'sninfra@admin.com',
         password: hashedPassword,
         role: 'Admin'
       });
-      console.log('Seeded default Admin user: admin@sninfra.com / SNInfraAdmin2026!');
+      console.log('Seeded default Admin user: sninfra@admin.com / sninfra@admin');
     }
 
     // 2. Seed Default Website Settings & Update Map URL & Force Color Palette
@@ -304,6 +309,19 @@ const seedDatabase = async () => {
       ];
       await Testimonial.insertMany(defaultReviews);
       console.log('Seeded default Google Maps reviews as testimonials.');
+    }
+
+    // 5. Seed Default Gallery Categories
+    const categoryCount = await GalleryCategory.countDocuments({});
+    if (categoryCount === 0) {
+      const defaultCategories = [
+        { name: 'Building', slug: 'building', description: 'Civil construction, residential & commercial structures', orderIndex: 1 },
+        { name: 'Interiors', slug: 'interiors', description: 'Modular kitchens, false ceiling, and luxury finishes', orderIndex: 2 },
+        { name: 'Elevation', slug: 'elevation', description: 'Modern 3D architectural facade and front elevations', orderIndex: 3 },
+        { name: 'Ongoing Sites', slug: 'ongoing-sites', description: 'Live foundation, slab casting, and structural progress', orderIndex: 4 }
+      ];
+      await GalleryCategory.insertMany(defaultCategories);
+      console.log('Seeded default gallery categories (Building, Interiors, Elevation, Ongoing Sites).');
     }
   } catch (error) {
     console.error('Seeding database failed:', error);
@@ -843,36 +861,171 @@ app.delete('/api/services/:id', authenticateJWT, async (req, res) => {
   }
 });
 
-// --- GALLERY ROUTES ---
+// --- GALLERY CATEGORIES ROUTES ---
 
-// Public Gallery display
-app.get('/api/gallery', async (req, res) => {
+// Get all categories (Public, auto-seeds if empty)
+app.get('/api/gallery/categories', async (req, res) => {
   try {
-    let localItems = [];
-    const photosDir = path.join(__dirname, '..', 'client', 'photos');
-    if (fs.existsSync(photosDir)) {
-      const files = await fs.promises.readdir(photosDir);
-      const imageExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg'];
-      localItems = files
-        .filter(file => imageExtensions.includes(path.extname(file).toLowerCase()))
-        .map((file, index) => {
-          const formattedTitle = path.parse(file).name
-            .replace(/ copy( \d+)?/g, '')
-            .replace(/[-_]/g, ' ')
-            .replace(/\b\w/g, c => c.toUpperCase());
-          
-          return {
-            _id: `local-${index}-${file}`,
-            url: `/photos/${file}`,
-            title: formattedTitle,
-            category: 'Construction',
-            beforeAfter: false
-          };
-        });
+    let categories = await GalleryCategory.find({}).sort({ orderIndex: 1, createdAt: 1 });
+    if (categories.length === 0) {
+      const defaultCategories = [
+        { name: 'Building', slug: 'building', description: 'Civil construction, residential & commercial structures', orderIndex: 1 },
+        { name: 'Interiors', slug: 'interiors', description: 'Modular kitchens, false ceiling, and luxury finishes', orderIndex: 2 },
+        { name: 'Elevation', slug: 'elevation', description: 'Modern 3D architectural facade and front elevations', orderIndex: 3 },
+        { name: 'Ongoing Sites', slug: 'ongoing-sites', description: 'Live foundation, slab casting, and structural progress', orderIndex: 4 }
+      ];
+      categories = await GalleryCategory.insertMany(defaultCategories);
+    }
+    res.json(categories);
+  } catch (error) {
+    console.error('Failed to retrieve gallery categories:', error);
+    res.status(500).json({ error: 'Failed to retrieve categories' });
+  }
+});
+
+// Create new category (Admin/Staff)
+app.post('/api/gallery/categories', authenticateJWT, async (req, res) => {
+  const { name, description, orderIndex } = req.body;
+  if (!name || !name.trim()) {
+    return res.status(400).json({ error: 'Category name is required' });
+  }
+
+  try {
+    const trimmedName = name.trim();
+    const slug = trimmedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
+    const exists = await GalleryCategory.findOne({
+      $or: [{ name: { $regex: new RegExp(`^${trimmedName}$`, 'i') } }, { slug }]
+    });
+    if (exists) {
+      return res.status(400).json({ error: 'A category with this name already exists' });
     }
 
-    const galleryItems = await Gallery.find({}).sort({ orderIndex: 1, createdAt: -1 });
-    const combined = [...localItems, ...galleryItems];
+    const category = await GalleryCategory.create({
+      name: trimmedName,
+      slug,
+      description: description ? description.trim() : '',
+      orderIndex: parseInt(orderIndex) || 0
+    });
+
+    await logActivity(req.user.id, req.user.name, 'Create Category', `Added gallery category: ${category.name}`, req);
+    res.status(201).json(category);
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Failed to create category' });
+  }
+});
+
+// Update category (Admin/Staff)
+app.put('/api/gallery/categories/:id', authenticateJWT, async (req, res) => {
+  const { name, description, orderIndex } = req.body;
+  try {
+    const category = await GalleryCategory.findById(req.params.id);
+    if (!category) return res.status(404).json({ error: 'Category not found' });
+
+    const oldName = category.name;
+    if (name && name.trim()) {
+      const trimmedName = name.trim();
+      const slug = trimmedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+      category.name = trimmedName;
+      category.slug = slug;
+
+      // Cascade update to all Gallery items with old category name
+      if (oldName !== trimmedName) {
+        await Gallery.updateMany({ category: oldName }, { category: trimmedName });
+      }
+    }
+
+    if (description !== undefined) category.description = description.trim();
+    if (orderIndex !== undefined) category.orderIndex = parseInt(orderIndex) || 0;
+
+    await category.save();
+    await logActivity(req.user.id, req.user.name, 'Update Category', `Updated category: ${category.name}`, req);
+    res.json(category);
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Failed to update category' });
+  }
+});
+
+// Delete category (Admin/Staff)
+app.delete('/api/gallery/categories/:id', authenticateJWT, async (req, res) => {
+  try {
+    const category = await GalleryCategory.findById(req.params.id);
+    if (!category) return res.status(404).json({ error: 'Category not found' });
+
+    // Reassign items under this category to first remaining category or 'Building'
+    const fallbackCategory = await GalleryCategory.findOne({ _id: { $ne: category._id } }).sort({ orderIndex: 1 });
+    const targetCategoryName = fallbackCategory ? fallbackCategory.name : 'Building';
+    await Gallery.updateMany({ category: category.name }, { category: targetCategoryName });
+
+    await GalleryCategory.findByIdAndDelete(req.params.id);
+    await logActivity(req.user.id, req.user.name, 'Delete Category', `Deleted category: ${category.name}`, req);
+    res.json({ message: `Category deleted. Associated items moved to '${targetCategoryName}'.` });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete category' });
+  }
+});
+
+// --- GALLERY ROUTES ---
+
+// Public Gallery display (supports optional ?category= query)
+app.get('/api/gallery', async (req, res) => {
+  try {
+    const { category } = req.query;
+    
+    // Curated local real-life SN Infra project portfolio
+    const localItems = [
+      {
+        _id: 'local-1-villa-elevation',
+        url: '/photos/villa-elevation.png',
+        title: 'Contemporary Villa Elevation',
+        category: 'Elevation',
+        beforeAfter: false
+      },
+      {
+        _id: 'local-2-luxury-facade',
+        url: '/photos/luxury-facade.png',
+        title: 'Luxury 3-Storey Villa Facade',
+        category: 'Elevation',
+        beforeAfter: false
+      },
+      {
+        _id: 'local-3-commercial-warehouse',
+        url: '/photos/commercial-warehouse.png',
+        title: 'Commercial Steel Warehouse Shed',
+        category: 'Building',
+        beforeAfter: false
+      },
+      {
+        _id: 'local-4-construction-site',
+        url: '/photos/construction-site.png',
+        title: 'Active Structural Column Casting',
+        category: 'Ongoing Sites',
+        beforeAfter: false
+      },
+      {
+        _id: 'local-5-masonry-work',
+        url: '/photos/masonry-work.png',
+        title: 'Civil Masonry Brickwork On-Site',
+        category: 'Ongoing Sites',
+        beforeAfter: false
+      },
+      {
+        _id: 'local-6-flooring-work',
+        url: '/photos/flooring-work.png',
+        title: 'Premium Tile & Granite Entrance',
+        category: 'Interiors',
+        beforeAfter: false
+      }
+    ];
+
+    const filter = category && category !== 'All' ? { category } : {};
+    const galleryItems = await Gallery.find(filter).sort({ orderIndex: 1, createdAt: -1 });
+
+    const filteredLocal = category && category !== 'All'
+      ? localItems.filter(item => item.category.toLowerCase() === category.toLowerCase())
+      : localItems;
+
+    const combined = [...filteredLocal, ...galleryItems];
     res.json(combined);
   } catch (error) {
     console.error('Failed to retrieve gallery:', error);
@@ -914,17 +1067,36 @@ app.post('/api/gallery', authenticateJWT, upload.fields([
     const item = await Gallery.create({
       title: title || '',
       url,
-      category,
+      category: category || 'Building',
       beforeAfter: isBA,
       beforeUrl,
       afterUrl,
       orderIndex: parseInt(orderIndex) || 0
     });
 
-    await logActivity(req.user.id, req.user.name, 'Create Gallery', `Added gallery image: ${category}`, req);
+    await logActivity(req.user.id, req.user.name, 'Create Gallery', `Added gallery image: ${category || 'Building'}`, req);
     res.status(201).json(item);
   } catch (error) {
     res.status(500).json({ error: error.message || 'Failed to create gallery item' });
+  }
+});
+
+// Update Gallery item (Admin/Staff)
+app.put('/api/gallery/:id', authenticateJWT, async (req, res) => {
+  const { title, category, orderIndex } = req.body;
+  try {
+    const item = await Gallery.findById(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Gallery item not found' });
+
+    if (title !== undefined) item.title = title;
+    if (category) item.category = category;
+    if (orderIndex !== undefined) item.orderIndex = parseInt(orderIndex) || 0;
+
+    await item.save();
+    await logActivity(req.user.id, req.user.name, 'Update Gallery', `Updated gallery item: ${item.title || item.category}`, req);
+    res.json(item);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update gallery item' });
   }
 });
 
@@ -1369,10 +1541,9 @@ app.delete('/api/media/:filename', authenticateJWT, async (req, res) => {
 
 app.get('/api/analytics', authenticateJWT, async (req, res) => {
   try {
-    const totalProjects = await Project.countDocuments({});
-    const ongoingProjects = await Project.countDocuments({ status: 'Ongoing' });
-    const completedProjects = await Project.countDocuments({ status: 'Completed' });
     const totalGallery = await Gallery.countDocuments({});
+    const totalCategories = await GalleryCategory.countDocuments({});
+    const totalServices = await Service.countDocuments({});
     const totalEnquiries = await Enquiry.countDocuments({});
     const totalTestimonials = await Testimonial.countDocuments({});
 
@@ -1395,20 +1566,19 @@ app.get('/api/analytics', authenticateJWT, async (req, res) => {
       { $sort: { '_id.year': 1, '_id.month': 1 } }
     ]);
 
-    // Categories Distribution
-    const categoryDistribution = await Project.aggregate([
+    // Gallery Categories Distribution
+    const categoryDistribution = await Gallery.aggregate([
       { $group: { _id: '$category', count: { $sum: 1 } } }
     ]);
 
-    // Recent Activites Feed
+    // Recent Activities Feed
     const recentActivities = await ActivityLog.find({}).sort({ timestamp: -1 }).limit(10);
 
     res.json({
       metrics: {
-        totalProjects,
-        ongoingProjects,
-        completedProjects,
         totalGallery,
+        totalCategories,
+        totalServices,
         totalEnquiries,
         totalTestimonials
       },
@@ -1438,19 +1608,36 @@ app.get('/api/health', (req, res) => {
 });
 
 // Serve static client build files if they exist (production mode fallback)
-const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
+const candidateDistPaths = [
+  path.resolve(__dirname, '..', 'client', 'dist'),
+  path.resolve(__dirname, 'client', 'dist'),
+  path.resolve(__dirname, 'public'),
+  path.resolve(process.cwd(), 'client', 'dist'),
+  path.resolve(process.cwd(), 'dist')
+];
+const clientDistPath = candidateDistPaths.find(p => fs.existsSync(path.join(p, 'index.html'))) || candidateDistPaths[0];
+
 if (fs.existsSync(clientDistPath)) {
+  console.log(`Serving static client files from: ${clientDistPath}`);
   app.use(express.static(clientDistPath));
 }
 
-// Default wildcard fallback
+// Default wildcard fallback for SPA routing on browser refresh
 app.get('*', (req, res) => {
-  const indexHtmlPath = path.join(clientDistPath, 'index.html');
-  if (fs.existsSync(indexHtmlPath) && !req.path.startsWith('/api') && !req.path.startsWith('/uploads') && !req.path.startsWith('/photos')) {
-    res.sendFile(indexHtmlPath);
-  } else {
-    res.status(404).json({ error: 'Endpoint routing not matched' });
+  // If request is for an unmatched API or uploads endpoint, return 404 JSON
+  if (req.path.startsWith('/api') || req.path.startsWith('/uploads') || req.path.startsWith('/photos')) {
+    return res.status(404).json({ error: 'Endpoint routing not matched' });
   }
+
+  const indexHtmlPath = path.join(clientDistPath, 'index.html');
+  if (fs.existsSync(indexHtmlPath)) {
+    return res.sendFile(indexHtmlPath);
+  }
+
+  res.status(404).json({
+    error: 'Frontend index.html not found. Please build the frontend with "npm run build".',
+    searchedPath: clientDistPath
+  });
 });
 
 // Global Error Handler

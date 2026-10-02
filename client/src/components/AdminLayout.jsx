@@ -22,8 +22,7 @@ const AdminLayout = ({ children }) => {
 
   const navItems = [
     { name: 'Analytics Dashboard', path: '/admin/dashboard', icon: <FaChartPie size={14} /> },
-    { name: 'Projects Manager', path: '/admin/projects', icon: <FaTasks size={14} /> },
-    { name: 'Gallery Portfolio', path: '/admin/gallery', icon: <FaImages size={14} /> },
+    { name: 'Gallery & Categories', path: '/admin/gallery', icon: <FaImages size={14} /> },
     { name: 'Services Catalog', path: '/admin/services', icon: <FaWrench size={14} /> },
     { name: 'Client Testimonials', path: '/admin/testimonials', icon: <FaComments size={14} /> },
     { name: 'Contact Inbox', path: '/admin/enquiries', icon: <FaInbox size={14} /> },
@@ -37,10 +36,10 @@ const AdminLayout = ({ children }) => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col md:flex-row relative">
+    <div className="h-full w-full bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row overflow-hidden relative">
       
       {/* LEFT SIDEBAR PANEL */}
-      <aside className="w-full md:w-64 bg-slate-900 text-slate-400 flex flex-col justify-between shrink-0 p-6 border-r border-slate-950">
+      <aside className="w-full md:w-64 h-full bg-slate-900 text-slate-400 flex flex-col justify-between shrink-0 p-6 border-r border-slate-950 overflow-y-auto">
         
         <div>
           {/* Logo Heading */}
@@ -114,8 +113,8 @@ const AdminLayout = ({ children }) => {
       </aside>
 
       {/* CENTER WORKPLACE WINDOW */}
-      <main className="flex-grow p-6 sm:p-8 md:p-10 max-h-screen overflow-y-auto">
-        <div className="max-w-6xl mx-auto flex flex-col gap-8">
+      <main className="flex-1 h-full overflow-y-auto p-6 sm:p-8 md:p-10">
+        <div className="max-w-6xl mx-auto flex flex-col gap-8 pb-16">
           {children}
         </div>
       </main>

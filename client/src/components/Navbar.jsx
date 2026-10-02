@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaBars, FaTimes, FaSun, FaMoon, FaUserShield } from 'react-icons/fa';
+import { FaBars, FaTimes, FaSun, FaMoon } from 'react-icons/fa';
 import { useSettings } from '../context/SettingsContext';
-import { useAuth } from '../context/AuthContext';
 import logoImg from '../logo.png';
 
 const Navbar = () => {
   const { settings, darkMode, toggleDarkMode } = useSettings();
-  const { user } = useAuth();
   const location = useLocation();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -36,18 +34,21 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
     { name: 'Services', path: '/services' },
-    { name: 'Projects', path: '/projects' },
     { name: 'Gallery', path: '/gallery' },
     { name: 'Testimonials', path: '/#testimonials' },
     { name: 'Contact', path: '/contact' },
   ];
 
-  const handleNavClick = (path) => {
-    if (path.startsWith('/#')) {
+  const handleNavClick = (e, path) => {
+    if (path.includes('#')) {
       const elementId = path.split('#')[1];
-      const element = document.getElementById(elementId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      if (location.pathname === '/') {
+        e?.preventDefault();
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+        window.history.pushState(null, '', `/#${elementId}`);
       }
     }
   };
@@ -59,15 +60,15 @@ const Navbar = () => {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 bg-[#1C68F5] border-b border-[#1C68F5]/30 shadow-md py-4 transition-all duration-300"
+      className="fixed top-0 left-0 right-0 z-50 h-20 bg-[#1C68F5] border-b border-blue-600/40 shadow-lg flex items-center transition-all duration-300"
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between">
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-3 group">
           <img 
             src={settings?.logoUrl || logoImg} 
-            alt="Logo" 
-            className="h-10 w-auto object-contain transition-transform group-hover:scale-105" 
+            alt="SN Infra Logo" 
+            className="h-10 w-10 object-contain bg-white rounded-xl p-1 shadow-md border border-white/30 transition-transform group-hover:scale-105 shrink-0" 
           />
           <div>
             <span className="text-xl font-black tracking-wider text-white block leading-none uppercase">
@@ -95,7 +96,7 @@ const Navbar = () => {
                 {link.path.startsWith('/#') ? (
                   <Link
                     to={link.path}
-                    onClick={() => handleNavClick(link.path)}
+                    onClick={(e) => handleNavClick(e, link.path)}
                     className="text-xs uppercase tracking-wider font-bold text-white hover:text-[#FFC100] transition-colors"
                   >
                     {link.name}
@@ -122,20 +123,6 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             
 
-            {/* Dashboard redirect if logged in */}
-            {user && (
-              <Link
-                to="/admin/dashboard"
-                className="p-2 rounded-xl bg-[#FFC100] text-[#1C68F5] hover:bg-[#ffca28] transition-colors shadow-md relative group font-bold"
-                title="Go to CMS Dashboard"
-              >
-                <FaUserShield size={16} />
-                <span className="absolute top-12 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] py-1 px-2 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  Admin Panel
-                </span>
-              </Link>
-            )}
-
             {/* Quote CTA Button */}
             <Link
               to="/contact"
@@ -148,17 +135,6 @@ const Navbar = () => {
 
         {/* MOBILE MENU TOGGLER */}
         <div className="flex items-center gap-3 lg:hidden">
-          
-
-          {user && (
-            <Link
-              to="/admin/dashboard"
-              className="p-2 rounded-xl bg-[#FFC100] text-[#1C68F5]"
-            >
-              <FaUserShield size={15} />
-            </Link>
-          )}
-
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-2 rounded-xl text-white bg-white/10"
@@ -178,9 +154,9 @@ const Navbar = () => {
                 {link.path.startsWith('/#') ? (
                   <Link
                     to={link.path}
-                    onClick={() => {
+                    onClick={(e) => {
                       setIsMobileMenuOpen(false);
-                      setTimeout(() => handleNavClick(link.path), 100);
+                      handleNavClick(e, link.path);
                     }}
                     className="block text-base font-bold uppercase tracking-wider py-1.5 text-white hover:text-[#FFC100]"
                   >

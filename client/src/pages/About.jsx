@@ -48,7 +48,7 @@ const About = () => {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+    <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-0">
       <SEO 
         title="About Us | Coimbatore & Pollachi Construction Specialists" 
         description="Learn about SN Infra, our dedicated mission, structural vision, and core values. We are leading builders in Coimbatore and Pollachi specializing in safety and Vastu compliance."
@@ -57,9 +57,9 @@ const About = () => {
       />
       
       {/* HEADER SECTION */}
-      <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">
+      <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,193,0,0.1),transparent)] pointer-events-none" />
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="max-w-4xl mx-auto relative z-10" data-aos="fade-down">
           <div className="w-12 h-1 bg-[#FFC100] mx-auto mb-4" />
           <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">About SN Infra</h1>
           <p className="text-blue-100 text-xs md:text-sm max-w-xl mx-auto leading-relaxed">
@@ -69,16 +69,17 @@ const About = () => {
       </section>
 
       {/* CORE DETAILS */}
-      <section className="max-w-7xl mx-auto px-6 pt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div className="relative group">
+      <section className="max-w-7xl mx-auto px-6 pt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center overflow-hidden">
+        <div className="relative group" data-aos="fade-right">
           <div className="absolute inset-0 bg-primary/10 rounded-3xl blur-2xl group-hover:scale-105 transition-transform" />
           <img 
-            src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop" 
+            src="/photos/masonry-work.png" 
+            onError={(e) => { e.currentTarget.src = '/photos/villa-elevation.png'; }}
             alt="SN Infra Team" 
             className="rounded-3xl shadow-xl w-full h-[400px] object-cover relative z-10 border border-slate-200 dark:border-slate-800"
           />
         </div>
-        <div className="text-left">
+        <div className="text-left" data-aos="fade-left">
           <span className="text-xs uppercase tracking-widest text-secondary font-bold mb-3 block">Est. Over 15 Years Ago</span>
           <h2 className="text-3xl font-extrabold text-primary dark:text-white mb-6 leading-tight">
             Engineering Safe, Luxurious & Vastu-Compliant Landmarks
@@ -104,7 +105,7 @@ const About = () => {
       </section>
 
       {/* DYNAMIC TABS FOR MISSION / VISION / VALUES */}
-      <section className="max-w-7xl mx-auto px-6 pt-20">
+      <section className="max-w-7xl mx-auto px-6 pt-20" data-aos="fade-up">
         <div className="bg-white dark:bg-slate-800/80 rounded-3xl p-8 sm:p-12 border border-slate-200/50 dark:border-slate-800/35 glass shadow-sm text-left">
           
           {/* TAB BUTTONS */}
@@ -158,17 +159,17 @@ const About = () => {
 
       {/* METRIC BADGES CARD */}
       <section className="max-w-7xl mx-auto px-6 pt-20 grid grid-cols-1 sm:grid-cols-3 gap-8">
-        <div className="glass p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800/35 text-center shadow-sm">
+        <div className="glass p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800/35 text-center shadow-sm" data-aos="zoom-in" data-aos-delay="0">
           <h3 className="text-4xl font-extrabold text-secondary mb-2">15+</h3>
           <h4 className="text-xs uppercase tracking-widest font-bold text-slate-700 dark:text-slate-200 mb-2">Years on Field</h4>
           <p className="text-[11px] text-slate-400 leading-relaxed">Providing blueprints and construction services across Coimbatore, Pollachi, and beyond.</p>
         </div>
-        <div className="glass p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800/35 text-center shadow-sm">
+        <div className="glass p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800/35 text-center shadow-sm" data-aos="zoom-in" data-aos-delay="100">
           <h3 className="text-4xl font-extrabold text-secondary mb-2">100%</h3>
           <h4 className="text-xs uppercase tracking-widest font-bold text-slate-700 dark:text-slate-200 mb-2">Structural Safety</h4>
           <p className="text-[11px] text-slate-400 leading-relaxed">Safety metrics evaluated against local regulations and load bearing standards.</p>
         </div>
-        <div className="glass p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800/35 text-center shadow-sm">
+        <div className="glass p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800/35 text-center shadow-sm" data-aos="zoom-in" data-aos-delay="200">
           <h3 className="text-4xl font-extrabold text-secondary mb-2">13</h3>
           <h4 className="text-xs uppercase tracking-widest font-bold text-slate-700 dark:text-slate-200 mb-2">Expert Services</h4>
           <p className="text-[11px] text-slate-400 leading-relaxed">Complete integration of design drafts, permits, mason contract staffing, and walkthroughs.</p>

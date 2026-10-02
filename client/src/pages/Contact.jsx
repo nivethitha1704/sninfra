@@ -39,7 +39,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-8">
+    <div className="w-full bg-white dark:bg-[#0F172A] min-h-screen pb-20 pt-0">
       <SEO 
         title="Contact Us | Construction Office Coimbatore & Pollachi" 
         description="Get in touch with SN Infra construction company. Contact us for building estimations, DTCP approvals, residential duplex constructions, and interior designs. Office located at Mahalingapuram, Pollachi."
@@ -48,9 +48,9 @@ const Contact = () => {
       />
       
       {/* HEADER SECTION */}
-      <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10">
+      <section className="bg-[#1C68F5] text-white py-20 px-6 text-center relative border-b border-white/10 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,193,0,0.1),transparent)] pointer-events-none" />
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="max-w-4xl mx-auto relative z-10" data-aos="fade-down">
           <div className="w-12 h-1 bg-[#FFC100] mx-auto mb-4" />
           <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">Contact SN Infra</h1>
           <p className="text-blue-100 text-xs md:text-sm max-w-xl mx-auto leading-relaxed">
@@ -60,11 +60,14 @@ const Contact = () => {
       </section>
 
       {/* CORE CONTACT LAYOUT GRID (Blue + White Split) */}
-      <section className="max-w-7xl mx-auto px-6 pt-16">
+      <section className="max-w-7xl mx-auto px-6 pt-16 overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch rounded-3xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-800">
           
           {/* Left Side: Vivid Blue Column */}
-          <div className="lg:col-span-5 bg-[#1C68F5] text-white p-8 sm:p-12 flex flex-col justify-between text-left">
+          <div 
+            data-aos="fade-right"
+            className="lg:col-span-5 bg-[#1C68F5] text-white p-8 sm:p-12 flex flex-col justify-between text-left"
+          >
             <div>
               <h2 className="text-2xl font-black uppercase tracking-tight mb-4 text-white">
                 Consultation Coordinates
@@ -142,7 +145,10 @@ const Contact = () => {
           </div>
 
           {/* Right Side: White Form Column */}
-          <div className="lg:col-span-7 bg-white dark:bg-[#0F172A] p-8 sm:p-12 flex flex-col gap-6 text-left">
+          <div 
+            data-aos="fade-left"
+            className="lg:col-span-7 bg-white dark:bg-[#0F172A] p-8 sm:p-12 flex flex-col gap-6 text-left"
+          >
             <h3 className="text-2xl font-black text-[#1C68F5] dark:text-white uppercase tracking-tight mb-2">
               Send Enquiry Proposal
             </h3>
@@ -242,7 +248,7 @@ const Contact = () => {
       </section>
 
       {/* MAP EMBED FRAME */}
-      <section className="max-w-7xl mx-auto px-6 pt-16">
+      <section className="max-w-7xl mx-auto px-6 pt-16" data-aos="zoom-in">
         <div className="w-full h-96 rounded-3xl overflow-hidden shadow-inner border border-slate-200 dark:border-slate-800">
           <iframe 
             src={mapIframe.includes('src="') ? mapIframe.match(/src="([^"]+)"/)?.[1] || mapIframe : mapIframe}

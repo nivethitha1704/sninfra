@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FaArrowRight, FaClock, FaCheckCircle, FaAward, 
   FaPhoneAlt, FaEnvelope, FaChevronRight, FaChevronDown,
-  FaShieldAlt, FaHandshake, FaToolbox, FaThumbsUp, FaEye
+  FaShieldAlt, FaHandshake, FaToolbox, FaThumbsUp
 } from 'react-icons/fa';
 import * as Icons from 'react-icons/fa';
 import axios from 'axios';
@@ -56,8 +56,9 @@ const AnimatedCounter = ({ value, suffix = '', duration = 2000 }) => {
 // --- HOME PAGE COMPONENT ---
 const Home = () => {
   const { settings } = useSettings();
+  const location = useLocation();
   const [services, setServices] = useState([]);
-  const [projects, setProjects] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [faqOpen, setFaqOpen] = useState({});
@@ -153,22 +154,46 @@ const Home = () => {
   useEffect(() => {
     const loadHomeData = async () => {
       try {
-        const [servicesRes, projectsRes, testimonialsRes, galleryRes] = await Promise.all([
+        const [servicesRes, categoriesRes, testimonialsRes, galleryRes] = await Promise.all([
           axios.get('/api/services'),
-          axios.get('/api/projects'),
+          axios.get('/api/gallery/categories'),
           axios.get('/api/testimonials'),
           axios.get('/api/gallery')
         ]);
         setServices(servicesRes.data.slice(0, 6)); // Display first 6 services on home
-        setProjects(projectsRes.data.slice(0, 3)); // Display recent 3 projects
+        setCategories(categoriesRes.data || []);
         setTestimonials(testimonialsRes.data);
-        setGallery(galleryRes.data.slice(0, 6)); // Display 6 gallery items on home
+        setGallery(galleryRes.data || []);
       } catch (err) {
         console.error('Failed to load homepage data:', err);
       }
     };
     loadHomeData();
   }, []);
+
+  // Smooth scroll directly to anchor target when arriving via hash link
+  useEffect(() => {
+    if (location.hash) {
+      const elementId = location.hash.replace('#', '');
+      const scrollToHash = () => {
+        const el = document.getElementById(elementId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          return true;
+        }
+        return false;
+      };
+
+      if (!scrollToHash()) {
+        const t1 = setTimeout(scrollToHash, 100);
+        const t2 = setTimeout(scrollToHash, 350);
+        return () => {
+          clearTimeout(t1);
+          clearTimeout(t2);
+        };
+      }
+    }
+  }, [location.hash]);
 
   const toggleFaq = (idx) => {
     setFaqOpen(prev => ({ ...prev, [idx]: !prev[idx] }));
@@ -207,77 +232,136 @@ const Home = () => {
       />
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[85vh] flex items-center justify-start px-6 sm:px-16 py-24 bg-slate-950 overflow-hidden">
-        {/* Subtle Background Image and Gradient Overlay */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1600&auto=format&fit=crop" 
-            alt="Construction background" 
-            className="w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1C68F5]/80 via-[#1C68F5]/50 to-transparent" />
+      <section className="relative min-h-[85vh] flex items-center justify-start px-6 sm:px-16 py-24 bg-gradient-to-br from-[#0B1528] via-[#0F2756] to-[#0A1938] overflow-hidden blueprint-grid">
+        {/* Subtle Architectural Gradient & CAD Overlay */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B1528] via-[#0F2756]/90 to-transparent" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#1C68F5]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#FFC100]/10 rounded-full blur-3xl pointer-events-none" />
         </div>
 
-        {/* Blueprint Crane SVG Animation */}
-        <div className="absolute right-0 bottom-0 top-0 w-full lg:w-1/2 pointer-events-none z-0">
-          <svg className="w-full h-full text-[#FFC100] opacity-25" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="100" y1="550" x2="700" y2="550" stroke="currentColor" strokeWidth="2" strokeDasharray="5 5" />
-            <path d="M 450 550 L 480 200 L 500 200 L 530 550 Z" stroke="currentColor" strokeWidth="2" />
-            <line x1="450" y1="550" x2="530" y2="550" stroke="currentColor" strokeWidth="3" />
-            <line x1="480" y1="200" x2="500" y2="200" stroke="currentColor" strokeWidth="3" />
-            <line x1="490" y1="200" x2="150" y2="200" stroke="currentColor" strokeWidth="3" />
-            <line x1="490" y1="200" x2="600" y2="200" stroke="currentColor" strokeWidth="3" />
-            <rect x="250" y="200" width="12" height="6" stroke="currentColor" strokeWidth="2" />
-            <line x1="256" y1="206" x2="256" y2="350" stroke="currentColor" strokeWidth="1" />
-            <path d="M 251 350 Q 256 355 261 350" stroke="currentColor" strokeWidth="2" fill="none" />
+        {/* Blueprint CAD Engineering Graphic */}
+        <div className="absolute right-4 lg:right-16 bottom-0 top-0 w-full lg:w-1/2 pointer-events-none z-0 hidden sm:flex items-center justify-end opacity-40 lg:opacity-75">
+          <svg className="w-full max-w-xl h-auto text-[#FFC100]" viewBox="0 0 700 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Grid Coordinates & Scale Lines */}
+            <line x1="50" y1="450" x2="650" y2="450" stroke="currentColor" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.6" />
+            <line x1="50" y1="460" x2="50" y2="440" stroke="currentColor" strokeWidth="1.5" />
+            <line x1="650" y1="460" x2="650" y2="440" stroke="currentColor" strokeWidth="1.5" />
+            <text x="310" y="470" fill="currentColor" fontSize="10" fontFamily="monospace" opacity="0.8">GRID 01 • SPAN 24.0m</text>
+
+            {/* Architectural Building Skeleton */}
+            <rect x="360" y="140" width="220" height="310" stroke="#1C68F5" strokeWidth="2" strokeDasharray="3 3" opacity="0.8" />
+            <rect x="380" y="160" width="180" height="290" stroke="currentColor" strokeWidth="1.5" opacity="0.7" />
+            
+            {/* Floor levels */}
+            <line x1="360" y1="210" x2="580" y2="210" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+            <line x1="360" y1="280" x2="580" y2="280" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+            <line x1="360" y1="350" x2="580" y2="350" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+            <line x1="360" y1="410" x2="580" y2="410" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+            
+            <text x="590" y="214" fill="#93C5FD" fontSize="9" fontFamily="monospace">+12.0m [ROOF]</text>
+            <text x="590" y="284" fill="#93C5FD" fontSize="9" fontFamily="monospace">+8.0m [LVL 02]</text>
+            <text x="590" y="354" fill="#93C5FD" fontSize="9" fontFamily="monospace">+4.0m [LVL 01]</text>
+            <text x="590" y="414" fill="#93C5FD" fontSize="9" fontFamily="monospace">±0.0m [PLINTH]</text>
+
+            {/* Tower Crane Outline */}
+            <path d="M 240 450 L 260 90 L 275 90 L 295 450 Z" stroke="currentColor" strokeWidth="2" opacity="0.9" />
+            <line x1="240" y1="450" x2="295" y2="450" stroke="currentColor" strokeWidth="2.5" />
+            <line x1="270" y1="90" x2="110" y2="90" stroke="currentColor" strokeWidth="2.5" />
+            <line x1="270" y1="90" x2="480" y2="90" stroke="currentColor" strokeWidth="2.5" />
+            {/* Jib diagonals */}
+            <line x1="160" y1="90" x2="265" y2="40" stroke="currentColor" strokeWidth="1.5" opacity="0.7" />
+            <line x1="265" y1="40" x2="370" y2="90" stroke="currentColor" strokeWidth="1.5" opacity="0.7" />
+            <line x1="267" y1="90" x2="267" y2="40" stroke="currentColor" strokeWidth="2" />
+            {/* Cable & Hook */}
+            <line x1="200" y1="90" x2="200" y2="240" stroke="currentColor" strokeWidth="1" strokeDasharray="4 2" />
+            <rect x="195" y="240" width="10" height="8" stroke="currentColor" strokeWidth="1.5" fill="#FFC100" />
+            <path d="M 197 248 Q 200 255 203 248" stroke="currentColor" strokeWidth="1.5" fill="none" />
+
+            {/* Engineering Badges */}
+            <circle cx="200" cy="240" r="16" stroke="#FFC100" strokeWidth="0.8" strokeDasharray="3 3" opacity="0.6" />
+            <text x="120" y="275" fill="#FFC100" fontSize="9" fontFamily="monospace">LOAD: 12.5T</text>
+            <text x="380" y="130" fill="#93C5FD" fontSize="10" fontFamily="sans-serif" fontWeight="bold">DTCP / VASTU COMPLIANT</text>
           </svg>
         </div>
 
         {/* HERO CONTENT */}
         <div className="max-w-4xl w-full relative z-10 text-left">
-          <span className="text-xs uppercase tracking-widest font-black text-[#FFC100] mb-4 block">
-            Premium Construction & Engineering
-          </span>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white uppercase tracking-tight leading-none mb-6">
+          <div 
+            data-aos="fade-down"
+            data-aos-duration="600"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 mb-6"
+          >
+            <span className="w-2 h-2 rounded-full bg-[#FFC100] animate-pulse" />
+            <span className="text-[11px] uppercase tracking-widest font-black text-[#FFC100]">
+              Certified Civil Engineers & Turnkey Builders
+            </span>
+          </div>
+
+          <h1 
+            data-aos="fade-up"
+            data-aos-duration="750"
+            className="text-4xl sm:text-5xl md:text-6xl font-black text-white uppercase tracking-tight leading-tight mb-6"
+          >
             Build The <span className="text-[#FFC100]">Future.</span><br/>
             Modern Construction<br/>
             <span className="text-[#FFC100]">Solutions.</span>
           </h1>
-          <p className="text-sm sm:text-base md:text-lg text-slate-200 leading-relaxed max-w-2xl mb-8">
-            Transforming customized concepts into certified architectural landmarks. We handle DTCP Approvals, Vastu-compliant sketching, structural design, and turnkey construction.
+
+          <p 
+            data-aos="fade-up"
+            data-aos-delay="150"
+            data-aos-duration="750"
+            className="text-sm sm:text-base md:text-lg text-slate-200 leading-relaxed max-w-2xl mb-8"
+          >
+            Transforming customized concepts into certified architectural landmarks. We handle DTCP Approvals, Vastu-compliant sketching, structural design, and turnkey construction across Coimbatore and Pollachi.
           </p>
-          <div className="flex flex-wrap gap-4">
+
+          <div 
+            data-aos="fade-up"
+            data-aos-delay="250"
+            className="flex flex-wrap gap-4"
+          >
             <Link 
               to="/contact" 
-              className="bg-[#FFC100] hover:bg-[#e0a800] text-[#1C68F5] font-black uppercase tracking-wider text-xs px-8 py-4 rounded shadow-lg transition-all"
+              className="bg-[#FFC100] hover:bg-[#e0a800] text-[#1C68F5] font-black uppercase tracking-wider text-xs px-8 py-4 rounded shadow-lg transition-all hover:scale-105"
             >
               Get A Quote
             </Link>
             <Link 
-              to="/projects" 
-              className="border-2 border-white hover:bg-white hover:text-[#1C68F5] text-white font-bold uppercase tracking-wider text-xs px-8 py-4 rounded transition-all"
+              to="/gallery" 
+              className="border-2 border-white hover:bg-white hover:text-[#1C68F5] text-white font-bold uppercase tracking-wider text-xs px-8 py-4 rounded transition-all hover:scale-105"
             >
-              View Projects
+              View Gallery
             </Link>
           </div>
         </div>
       </section>
 
       {/* --- ABOUT SECTION (White background) --- */}
-      <section className="py-24 px-6 bg-white text-slate-800">
+      <section className="py-24 px-6 bg-white text-slate-800 overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center text-left">
           {/* Left Side: Image */}
-          <div className="relative group">
+          <div 
+            data-aos="fade-right"
+            data-aos-duration="900"
+            className="relative group"
+          >
             <div className="absolute inset-0 bg-[#FFC100]/10 rounded-2xl blur-xl transition-transform" />
             <img 
-              src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop" 
-              alt="Engineering" 
+              src="/photos/modern-luxury-villa.jpg" 
+              onError={(e) => { e.currentTarget.src = '/photos/luxury-facade.png'; }}
+              alt="SN Infra Construction Engineering" 
               className="rounded-2xl shadow-lg border border-slate-200 object-cover w-full h-[350px] sm:h-[450px] relative z-10 transition-transform duration-500 hover:scale-[1.01]" 
             />
           </div>
           
           {/* Right Side: Content */}
-          <div className="flex flex-col items-start">
+          <div 
+            data-aos="fade-left"
+            data-aos-duration="900"
+            className="flex flex-col items-start"
+          >
             <div className="w-12 h-1 bg-[#FFC100] mb-4" /> {/* Yellow line above header */}
             <span className="text-xs uppercase tracking-widest font-black text-[#1C68F5] mb-2 block">About SN Infra</span>
             <h2 className="text-3xl md:text-4xl font-black text-[#1C68F5] uppercase tracking-tight mb-6">
@@ -286,7 +370,11 @@ const Home = () => {
             <p className="text-slate-600 text-sm leading-relaxed mb-6">
               At SN Infra, we bridge standard engineering principles with personalized aesthetics. Whether you require building plans, government approvals, structural drawings, vastu layouts, or complete lock-and-key residential and commercial construction, our team of qualified engineers delivers precision-focused outcomes.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 w-full">
+            <div 
+              data-aos="fade-up"
+              data-aos-delay="200"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 w-full"
+            >
               <div className="flex items-center gap-3">
                 <FaCheckCircle className="text-[#FFC100] shrink-0" />
                 <span className="text-xs font-semibold text-slate-700">ISO Standard Quality</span>
@@ -306,7 +394,7 @@ const Home = () => {
             </div>
             <Link 
               to="/about" 
-              className="bg-[#1C68F5] hover:bg-[#091aa1] text-white font-bold uppercase tracking-wider text-xs px-6 py-4 rounded transition-all shadow-md flex items-center gap-2 group"
+              className="bg-[#1C68F5] hover:bg-[#091aa1] text-white font-bold uppercase tracking-wider text-xs px-6 py-4 rounded transition-all shadow-md flex items-center gap-2 group hover:scale-105"
             >
               Learn More About Us
               <FaArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
@@ -317,7 +405,7 @@ const Home = () => {
 
       {/* --- SERVICES SECTION (Light Gray background) --- */}
       <section className="py-24 bg-slate-50 dark:bg-slate-900/60 px-6 border-y border-slate-200/50 dark:border-slate-800/40">
-        <div className="max-w-7xl mx-auto text-center mb-16">
+        <div data-aos="fade-up" className="max-w-7xl mx-auto text-center mb-16">
           <div className="w-12 h-1 bg-[#FFC100] mx-auto mb-4" />
           <span className="text-xs uppercase tracking-widest font-black text-[#1C68F5] mb-2 block">Our Solutions</span>
           <h2 className="text-3xl md:text-4xl font-black text-[#1C68F5] dark:text-white uppercase tracking-tight">
@@ -329,11 +417,13 @@ const Home = () => {
         </div>
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((svc) => {
+          {services.map((svc, idx) => {
             const IconComponent = Icons[svc.icon] || FaToolbox;
             return (
               <div 
                 key={svc._id} 
+                data-aos="fade-up"
+                data-aos-delay={(idx % 3) * 120}
                 className="bg-white dark:bg-[#0F172A] rounded-2xl p-8 hover:-translate-y-2 transition-all duration-300 flex flex-col items-start text-left border border-slate-200/50 dark:border-slate-800/30 shadow-sm relative group overflow-hidden hover:border-[#FFC100]"
               >
                 <div className="w-14 h-14 bg-blue-50 text-[#1C68F5] rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#1C68F5] group-hover:text-white transition-all duration-300">
@@ -357,98 +447,98 @@ const Home = () => {
           })}
         </div>
 
-        <div className="text-center mt-12">
+        <div data-aos="fade-up" className="text-center mt-12">
           <Link 
             to="/services" 
-            className="inline-flex items-center gap-2 border-2 border-[#1C68F5] dark:border-white text-[#1C68F5] dark:text-white hover:bg-[#1C68F5] hover:text-white dark:hover:bg-white dark:hover:text-[#1C68F5] font-bold uppercase tracking-wider text-xs px-6 py-3 rounded transition-all"
+            className="inline-flex items-center gap-2 border-2 border-[#1C68F5] dark:border-white text-[#1C68F5] dark:text-white hover:bg-[#1C68F5] hover:text-white dark:hover:bg-white dark:hover:text-[#1C68F5] font-bold uppercase tracking-wider text-xs px-6 py-3 rounded transition-all hover:scale-105"
           >
             Explore All 13 Services
           </Link>
         </div>
       </section>
 
-      {/* --- PROJECTS / FEATURED PROJECTS SECTION (Vivid Blue background) --- */}
-      <section className="py-24 bg-[#1C68F5] text-white px-6">
+      {/* --- GALLERY & WORK SHOWCASE SECTION (Vivid Blue background) --- */}
+      <section className="py-24 bg-[#1C68F5] text-white px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-end justify-between mb-16 gap-4">
-          <div className="text-left">
+          <div data-aos="fade-right" className="text-left">
             <div className="w-12 h-1 bg-[#FFC100] mb-4" />
-            <span className="text-xs uppercase tracking-widest font-black text-[#FFC100] mb-2 block">Premium Portfolio</span>
+            <span className="text-xs uppercase tracking-widest font-black text-[#FFC100] mb-2 block">Our Craftsmanship</span>
             <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-2">
-              Featured Projects
+              Building & Interiors Gallery
             </h2>
             <p className="text-sm text-blue-100 max-w-lg leading-relaxed">
-              Explore our landmark projects across Tamil Nadu. Review budgets, scopes, and progress tracker ratings.
+              Explore our landmark architectural executions, luxury interior finishes, structural elevations, and on-site progress.
             </p>
           </div>
-          {/* Quick Filter Tabs */}
-          <div className="flex flex-wrap gap-2">
-            {['All', 'Residential', 'Commercial', 'Interior'].map(cat => (
+          {/* Quick Category Filter Tabs */}
+          <div data-aos="fade-left" className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setActiveFilter('All')}
+              className={`px-4 py-2.5 rounded text-xs font-bold uppercase tracking-wider transition-all ${
+                activeFilter === 'All' 
+                  ? 'bg-[#FFC100] text-[#1C68F5] shadow-md'
+                  : 'bg-white/10 text-white hover:bg-white/20 border border-white/10'
+              }`}
+            >
+              All
+            </button>
+            {categories.map(cat => (
               <button
-                key={cat}
-                onClick={() => setActiveFilter(cat)}
+                key={cat._id || cat.name}
+                onClick={() => setActiveFilter(cat.name)}
                 className={`px-4 py-2.5 rounded text-xs font-bold uppercase tracking-wider transition-all ${
-                  activeFilter === cat 
+                  activeFilter === cat.name 
                     ? 'bg-[#FFC100] text-[#1C68F5] shadow-md'
                     : 'bg-white/10 text-white hover:bg-white/20 border border-white/10'
                 }`}
               >
-                {cat}
+                {cat.name}
               </button>
             ))}
           </div>
         </div>
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects
-            .filter(p => activeFilter === 'All' || p.category === activeFilter)
-            .map((proj) => (
+          {gallery
+            .filter(item => activeFilter === 'All' || item.category === activeFilter)
+            .slice(0, 6)
+            .map((item, idx) => (
               <div 
-                key={proj._id} 
-                className="bg-white text-slate-800 rounded-lg overflow-hidden shadow-lg border border-white/10 flex flex-col group text-left"
+                key={item._id} 
+                data-aos="zoom-in-up"
+                data-aos-delay={(idx % 3) * 120}
+                className="bg-white text-slate-800 rounded-lg overflow-hidden shadow-lg border border-white/10 flex flex-col group text-left transition-all hover:-translate-y-1 duration-300"
               >
-                <div className="relative overflow-hidden h-60">
+                <div className="relative overflow-hidden h-64 bg-slate-100">
                   <img 
-                    src={proj.thumbnail || 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800'} 
-                    alt={proj.name}
+                    src={item.beforeAfter ? item.beforeUrl : item.url} 
+                    onError={(e) => { e.currentTarget.src = '/photos/villa-elevation.png'; }}
+                    alt={item.title || 'Work sample'}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                   />
                   <div className="absolute top-4 left-4 bg-slate-900/90 text-white text-[10px] uppercase font-bold tracking-widest px-3 py-1.5 rounded">
-                    {proj.status}
+                    {item.category}
                   </div>
-                  {proj.budget && (
-                    <div className="absolute bottom-4 right-4 bg-[#FFC100] text-[#1C68F5] text-xs font-black px-3 py-1.5 rounded shadow-md">
-                      {proj.budget}
+                  {item.beforeAfter && (
+                    <div className="absolute top-4 right-4 bg-[#FFC100] text-[#1C68F5] text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded shadow">
+                      Before / After
                     </div>
                   )}
                 </div>
 
                 <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-lg font-bold text-[#1C68F5] uppercase tracking-tight mb-2">
-                    {proj.name}
+                  <h3 className="text-base font-bold text-[#1C68F5] uppercase tracking-tight mb-2 line-clamp-1">
+                    {item.title || `${item.category} Work`}
                   </h3>
-                  <p className="text-[10px] text-slate-400 mb-4 font-bold uppercase tracking-wider">
-                    {proj.location} • {proj.category}
+                  <p className="text-xs text-slate-500 mb-6 leading-relaxed">
+                    Engineered precision, certified structural materials, and Vastu compliance delivered in Coimbatore & Pollachi.
                   </p>
-                  
-                  {/* Completion percentage progress view */}
-                  <div className="mb-6">
-                    <div className="flex justify-between items-center text-xs font-bold text-slate-600 mb-2">
-                      <span>Progress Tracker</span>
-                      <span className="text-[#1C68F5] font-black">{proj.completionPercent}%</span>
-                    </div>
-                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-[#1C68F5] rounded-full"
-                        style={{ width: `${proj.completionPercent}%` }}
-                      />
-                    </div>
-                  </div>
 
                   <Link 
-                    to={`/projects/${proj._id}`}
+                    to="/gallery"
                     className="w-full text-center bg-[#1C68F5] hover:bg-[#091aa1] text-white text-xs font-bold uppercase tracking-wider py-3.5 rounded transition-all block mt-auto"
                   >
-                    View Project Details
+                    View in Full Gallery
                   </Link>
                 </div>
               </div>
@@ -457,33 +547,33 @@ const Home = () => {
 
         <div className="text-center mt-12">
           <Link 
-            to="/projects" 
+            to="/gallery" 
             className="bg-[#FFC100] hover:bg-[#ffca28] text-[#1C68F5] font-black uppercase tracking-wider text-xs px-8 py-4 rounded shadow-md transition-all inline-block"
           >
-            Explore Projects Index
+            Explore Complete Gallery
           </Link>
         </div>
       </section>
 
       {/* --- STATISTICS SECTION (White/light background) --- */}
-      <section className="py-16 bg-white text-[#1C68F5] border-b border-slate-200">
+      <section className="py-16 bg-white text-[#1C68F5] border-b border-slate-200" data-aos="fade-up">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-delay="0">
             <AnimatedCounter value={500} suffix="+" />
             <div className="w-8 h-0.5 bg-[#FFC100] my-2" />
             <span className="text-[10px] uppercase tracking-widest font-black text-slate-500">Projects Completed</span>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-delay="100">
             <AnimatedCounter value={10} suffix="+" />
             <div className="w-8 h-0.5 bg-[#FFC100] my-2" />
             <span className="text-[10px] uppercase tracking-widest font-black text-slate-500">Years Experience</span>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-delay="200">
             <AnimatedCounter value={100} suffix="%" />
             <div className="w-8 h-0.5 bg-[#FFC100] my-2" />
             <span className="text-[10px] uppercase tracking-widest font-black text-slate-500">Client Satisfaction</span>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-delay="300">
             <AnimatedCounter value={50} suffix="+" />
             <div className="w-8 h-0.5 bg-[#FFC100] my-2" />
             <span className="text-[10px] uppercase tracking-widest font-black text-slate-500">Team Members</span>
@@ -492,8 +582,8 @@ const Home = () => {
       </section>
 
       {/* --- PROCESS TIMELINE SECTION (Light background) --- */}
-      <section className="py-24 bg-slate-50 dark:bg-slate-900/40 px-6">
-        <div className="max-w-7xl mx-auto text-center mb-16">
+      <section className="py-24 bg-slate-50 dark:bg-slate-900/40 px-6 overflow-hidden">
+        <div className="max-w-7xl mx-auto text-center mb-16" data-aos="fade-up">
           <div className="w-12 h-1 bg-[#FFC100] mx-auto mb-4" />
           <span className="text-xs uppercase tracking-widest font-black text-[#1C68F5] mb-2 block">Our Timeline</span>
           <h2 className="text-3xl md:text-4xl font-black text-[#1C68F5] dark:text-white uppercase tracking-tight">
@@ -514,6 +604,8 @@ const Home = () => {
             return (
               <div 
                 key={idx} 
+                data-aos={isLeft ? "fade-right" : "fade-left"}
+                data-aos-delay={idx * 80}
                 className={`relative mb-12 sm:mb-6 flex flex-col ${
                   isLeft ? 'sm:col-start-1 sm:items-end sm:text-right' : 'sm:col-start-2 sm:items-start sm:text-left'
                 }`}
@@ -539,8 +631,8 @@ const Home = () => {
       </section>
 
       {/* --- TESTIMONIALS SECTION (White background) --- */}
-      <section id="testimonials" className="py-24 bg-white text-slate-800 px-6 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto text-center mb-16 flex flex-col items-center gap-4">
+      <section id="testimonials" className="py-24 bg-white text-slate-800 px-6 border-t border-slate-200 overflow-hidden scroll-mt-24">
+        <div className="max-w-7xl mx-auto text-center mb-16 flex flex-col items-center gap-4" data-aos="fade-up">
           <div className="w-12 h-1 bg-[#FFC100] mb-4" />
           <span className="text-xs uppercase tracking-widest font-black text-[#1C68F5] mb-2 block">Testimonials</span>
           <h2 className="text-3xl md:text-4xl font-black text-[#1C68F5] uppercase tracking-tight">
@@ -551,7 +643,7 @@ const Home = () => {
           </p>
           <button
             onClick={() => setIsReviewModalOpen(true)}
-            className="mt-2 bg-[#FFC100] hover:bg-[#ffca28] text-[#1C68F5] font-black uppercase tracking-wider text-xs px-6 py-3 rounded shadow transition-all"
+            className="mt-2 bg-[#FFC100] hover:bg-[#ffca28] text-[#1C68F5] font-black uppercase tracking-wider text-xs px-6 py-3 rounded shadow transition-all hover:scale-105 active:scale-95"
           >
             Write a Customer Review
           </button>
@@ -562,6 +654,8 @@ const Home = () => {
             {testimonials.slice(0, 3).map((t, idx) => (
               <div 
                 key={t._id || idx} 
+                data-aos="fade-up"
+                data-aos-delay={idx * 120}
                 className="bg-white p-8 rounded-lg border-t-4 border-[#FFC100] border-x border-b border-slate-200 flex flex-col justify-between text-left relative shadow-sm hover:shadow-md transition-shadow"
               >
                 <div>
@@ -599,55 +693,15 @@ const Home = () => {
         )}
       </section>
 
-      {/* --- GALLERY PREVIEW SECTION (White background) --- */}
-      <section className="py-24 bg-white px-6 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto text-center mb-16">
-          <div className="w-12 h-1 bg-[#FFC100] mx-auto mb-4" />
-          <span className="text-xs uppercase tracking-widest font-black text-[#1C68F5] mb-2 block">Media Showcase</span>
-          <h2 className="text-3xl md:text-4xl font-black text-[#1C68F5] uppercase tracking-tight">
-            Photo Gallery
-          </h2>
-          <p className="text-sm text-slate-500 max-w-xl mx-auto mt-4">
-            A quick glimpse of our active constructions, elevations, and finished interior spaces.
-          </p>
-        </div>
-
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {gallery.map((item) => (
-            <div 
-              key={item._id}
-              className="group relative h-64 rounded-lg overflow-hidden shadow-md border border-slate-200 cursor-pointer"
-            >
-              <img 
-                src={item.url} 
-                alt={item.title || 'Gallery showcase'} 
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-[#1C68F5]/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <div className="text-center text-white p-4">
-                  <FaEye className="mx-auto text-[#FFC100] mb-2" size={24} />
-                  <span className="text-xs uppercase tracking-wider font-bold block">{item.title || 'View Project'}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <Link 
-            to="/gallery" 
-            className="bg-[#1C68F5] hover:bg-[#091aa1] text-white font-bold uppercase tracking-wider text-xs px-8 py-4 rounded shadow transition-all"
-          >
-            Explore Full Gallery
-          </Link>
-        </div>
-      </section>
 
       {/* --- CONTACT SECTION (Blue & White split) --- */}
-      <section className="w-full flex flex-col lg:flex-row border-t border-slate-200">
+      <section className="w-full flex flex-col lg:flex-row border-t border-slate-200 overflow-hidden">
         
         {/* Left Side: Blue column */}
-        <div className="w-full lg:w-1/2 bg-[#1C68F5] text-white p-8 sm:p-16 flex flex-col justify-between text-left">
+        <div 
+          data-aos="fade-right"
+          className="w-full lg:w-1/2 bg-[#1C68F5] text-white p-8 sm:p-16 flex flex-col justify-between text-left"
+        >
           <div>
             <div className="w-12 h-1 bg-[#FFC100] mb-6" />
             <span className="text-xs uppercase tracking-widest font-black text-[#FFC100] mb-2 block">Quick Connect</span>
@@ -698,9 +752,11 @@ const Home = () => {
             />
           </div>
         </div>
-
         {/* Right Side: White form */}
-        <div className="w-full lg:w-1/2 bg-white text-slate-800 p-8 sm:p-16 text-left flex flex-col justify-center">
+        <div 
+          data-aos="fade-left"
+          className="w-full lg:w-1/2 bg-white text-slate-800 p-8 sm:p-16 text-left flex flex-col justify-center"
+        >
           <span className="text-xs uppercase tracking-widest font-black text-[#1C68F5] mb-2 block font-bold">Inquiry Form</span>
           <h2 className="text-3xl font-black text-[#1C68F5] uppercase tracking-tight mb-8">Send Enquiry Proposal</h2>
           

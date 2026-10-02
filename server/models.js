@@ -62,14 +62,23 @@ const serviceSchema = new mongoose.Schema({
   orderIndex: { type: Number, default: 0 }
 });
 
+// --- GALLERY CATEGORY SCHEMA ---
+const galleryCategorySchema = new mongoose.Schema({
+  name: { type: String, required: true, unique: true, trim: true },
+  slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  description: { type: String, default: '' },
+  orderIndex: { type: Number, default: 0 },
+  createdAt: { type: Date, default: Date.now }
+});
+
 // --- GALLERY SCHEMA ---
 const gallerySchema = new mongoose.Schema({
   title: { type: String },
   url: { type: String, required: true },
   category: { 
     type: String, 
-    enum: ['Construction', 'Interior', 'Exterior', 'Drone', 'Completed', 'Site Progress'], 
     required: true,
+    default: 'Building',
     index: true 
   },
   beforeAfter: { type: Boolean, default: false },
@@ -147,6 +156,7 @@ const activityLogSchema = new mongoose.Schema({
 export const User = mongoose.model('User', userSchema);
 export const Project = mongoose.model('Project', projectSchema);
 export const Service = mongoose.model('Service', serviceSchema);
+export const GalleryCategory = mongoose.model('GalleryCategory', galleryCategorySchema);
 export const Gallery = mongoose.model('Gallery', gallerySchema);
 export const Testimonial = mongoose.model('Testimonial', testimonialSchema);
 export const Enquiry = mongoose.model('Enquiry', enquirySchema);

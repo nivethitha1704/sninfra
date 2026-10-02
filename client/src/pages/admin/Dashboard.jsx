@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AdminLayout from '../../components/AdminLayout';
 import { 
-  FaTasks, FaFolderOpen, FaCheckDouble, 
-  FaInbox, FaUserShield, FaClipboardList, FaSpinner 
+  FaImages, FaFolderOpen, FaWrench, 
+  FaInbox, FaSpinner, FaClipboardList, FaUserShield 
 } from 'react-icons/fa';
 import { Line, Doughnut } from 'react-chartjs-2';
 import { 
@@ -44,9 +44,9 @@ const Dashboard = () => {
       // Fallback local mocks
       setData({
         metrics: {
-          totalProjects: 15,
-          ongoingProjects: 8,
-          completedProjects: 7,
+          totalGallery: 12,
+          totalCategories: 4,
+          totalServices: 13,
           totalEnquiries: 45
         },
         recentActivities: [
@@ -63,10 +63,10 @@ const Dashboard = () => {
             { _id: { year: 2026, month: 7 }, count: 32 }
           ],
           categoryDistribution: [
-            { _id: 'Residential', count: 6 },
-            { _id: 'Commercial', count: 4 },
-            { _id: 'Interior', count: 3 },
-            { _id: 'Renovation', count: 2 }
+            { _id: 'Building', count: 6 },
+            { _id: 'Interiors', count: 4 },
+            { _id: 'Elevation', count: 3 },
+            { _id: 'Ongoing Sites', count: 2 }
           ]
         }
       });
@@ -105,27 +105,29 @@ const Dashboard = () => {
         fill: true,
         label: 'Contact Enquiries Received',
         data: timelineCounts.length > 0 ? timelineCounts : [5, 10, 15, 22, 18, 30],
-        borderColor: '#FF8C00',
-        backgroundColor: 'rgba(255, 140, 0, 0.08)',
+        borderColor: '#1C68F5',
+        backgroundColor: 'rgba(28, 104, 245, 0.08)',
         tension: 0.4,
       }
     ]
   };
 
-  // 2. Category Distribution (Doughnut Chart)
+  // 2. Gallery Categories Distribution (Doughnut Chart)
   const categoryLabels = data?.charts?.categoryDistribution?.map(item => item._id) || [];
   const categoryCounts = data?.charts?.categoryDistribution?.map(item => item.count) || [];
 
   const doughnutChartData = {
-    labels: categoryLabels.length > 0 ? categoryLabels : ['Residential', 'Commercial', 'Interior', 'Renovation'],
+    labels: categoryLabels.length > 0 ? categoryLabels : ['Building', 'Interiors', 'Elevation', 'Ongoing Sites'],
     datasets: [
       {
-        label: 'Projects',
+        label: 'Photos',
         data: categoryCounts.length > 0 ? categoryCounts : [6, 4, 3, 2],
         backgroundColor: [
-          '#0F4C81', // Primary Blue
-          '#FF8C00', // Secondary Orange
-          '#00C897', // Accent Emerald
+          '#1C68F5', // Royal Blue
+          '#FFC100', // Gold/Amber
+          '#00C897', // Emerald
+          '#8B5CF6', // Purple
+          '#EC4899', // Pink
           '#64748B'  // Slate grey
         ],
         borderWidth: 1,
@@ -133,7 +135,7 @@ const Dashboard = () => {
     ]
   };
 
-  const currentMetrics = data?.metrics || { totalProjects: 0, ongoingProjects: 0, completedProjects: 0, totalEnquiries: 0 };
+  const currentMetrics = data?.metrics || { totalGallery: 0, totalCategories: 0, totalServices: 0, totalEnquiries: 0 };
 
   return (
     <AdminLayout>
@@ -144,43 +146,43 @@ const Dashboard = () => {
             Analytics Overview
           </h1>
           <p className="text-slate-400 text-xs">
-            Monitor construction metrics, contact requests, and staff updates in real time.
+            Monitor media gallery assets, contact requests, and company operations in real time.
           </p>
         </div>
       </div>
 
       {/* METRIC ROW WIDGETS */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Total projects */}
+        {/* Total Gallery Photos */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/35 p-6 rounded-3xl flex items-center justify-between shadow-sm text-left">
           <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-2 block">Total Projects</span>
-            <span className="text-2xl font-black text-slate-800 dark:text-white leading-none">{currentMetrics.totalProjects}</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-2 block">Gallery Photos</span>
+            <span className="text-2xl font-black text-slate-800 dark:text-white leading-none">{currentMetrics.totalGallery}</span>
           </div>
           <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center shrink-0">
+            <FaImages size={18} />
+          </div>
+        </div>
+
+        {/* Gallery Categories */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/35 p-6 rounded-3xl flex items-center justify-between shadow-sm text-left">
+          <div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-2 block">Categories</span>
+            <span className="text-2xl font-black text-slate-800 dark:text-white leading-none">{currentMetrics.totalCategories}</span>
+          </div>
+          <div className="w-12 h-12 bg-amber-500/10 text-[#FFC100] rounded-2xl flex items-center justify-center shrink-0">
             <FaFolderOpen size={18} />
           </div>
         </div>
 
-        {/* Ongoing projects */}
+        {/* Core Services */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/35 p-6 rounded-3xl flex items-center justify-between shadow-sm text-left">
           <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-2 block">Ongoing</span>
-            <span className="text-2xl font-black text-slate-800 dark:text-white leading-none">{currentMetrics.ongoingProjects}</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-2 block">Core Services</span>
+            <span className="text-2xl font-black text-slate-800 dark:text-white leading-none">{currentMetrics.totalServices}</span>
           </div>
-          <div className="w-12 h-12 bg-orange-500/10 text-secondary rounded-2xl flex items-center justify-center shrink-0">
-            <FaTasks size={18} />
-          </div>
-        </div>
-
-        {/* Completed Projects */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/35 p-6 rounded-3xl flex items-center justify-between shadow-sm text-left">
-          <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-2 block">Completed</span>
-            <span className="text-2xl font-black text-slate-800 dark:text-white leading-none">{currentMetrics.completedProjects}</span>
-          </div>
-          <div className="w-12 h-12 bg-emerald-500/10 text-accent rounded-2xl flex items-center justify-center shrink-0">
-            <FaCheckDouble size={18} />
+          <div className="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center shrink-0">
+            <FaWrench size={18} />
           </div>
         </div>
 
@@ -206,9 +208,9 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Project Categories */}
+        {/* Gallery Categories */}
         <div className="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/35 p-6 rounded-3xl shadow-sm text-left flex flex-col justify-between">
-          <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-6">Projects by Category</h3>
+          <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-6">Gallery by Category</h3>
           <div className="w-full h-56 flex items-center justify-center">
             <Doughnut data={doughnutChartData} options={{ responsive: true, maintainAspectRatio: false }} />
           </div>

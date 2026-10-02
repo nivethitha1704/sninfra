@@ -56,7 +56,7 @@ const Login = () => {
             </label>
             <input
               type="email"
-              placeholder="admin@sninfra.com"
+              placeholder="sninfra@admin.com"
               className={`p-3.5 bg-slate-50 dark:bg-slate-950 text-xs rounded-xl outline-none focus:ring-1 focus:ring-secondary border ${
                 errors.email ? 'border-red-500' : 'border-transparent dark:border-slate-800'
               }`}
@@ -115,8 +115,8 @@ const Login = () => {
             <span className="text-blue-500 shrink-0 font-extrabold">ℹ</span>
             <span>
               Default credentials are seeded on first launch: <br />
-              <strong>Email:</strong> admin@sninfra.com <br />
-              <strong>Password:</strong> SNInfraAdmin2026! <br />
+              <strong>Email:</strong> sninfra@admin.com <br />
+              <strong>Password:</strong> sninfra@admin <br />
               To change or reset, contact your system administrator or modify database settings.
             </span>
           </div>
