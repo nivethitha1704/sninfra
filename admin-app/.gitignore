@@ -1,0 +1,15 @@
+# Node modules
+node_modules/
+
+# Build artifacts
+dist/
+
+# Android Studio / Gradle artifacts
+.gradle/
+build/
+app/build/
+*.iml
+.idea/
+local.properties
+.DS_Store
+Thumbs.db

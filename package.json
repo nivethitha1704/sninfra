@@ -1,0 +1,12 @@
+{
+  "name": "sn-infra-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "push": "powershell -ExecutionPolicy Bypass -File ./scripts/push-to-github.ps1",
+    "push:msg": "powershell -ExecutionPolicy Bypass -File ./scripts/push-to-github.ps1 -message",
+    "build": "cd client && npm run build",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev"
+  }
+}

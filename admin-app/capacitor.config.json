@@ -1,0 +1,10 @@
+{
+  "appId": "com.sninfra.admin",
+  "appName": "SN Infra Admin",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  }
+}
